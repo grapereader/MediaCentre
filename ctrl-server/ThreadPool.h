@@ -12,22 +12,25 @@ namespace vmc
     class PoolThread
     {
     public:
-        PoolThread(std::function<void(void)> const &func);
+        PoolThread(int id, std::function<void(void)> const &func);
         ~PoolThread();
-        std::atomic<bool> const *isDone() const;
+        bool isDone() const;
+        int getId() const;
     private:
-        std::unique_ptr<std::thread> thread;
+        int id;
+        std::thread *thread;
         std::atomic<bool> *done;
     };
 
     class ThreadPool
     {
     public:
-        ThreadPool(int threads);
+        ThreadPool(unsigned int threads);
         void task(std::function<void(void)> const &func);
     private:
-        int threadCount;
-        std::unique_ptr<std::vector<PoolThread>> threads;
+        unsigned int threadCount;
+        int idCount;
+        std::unique_ptr<std::vector<std::unique_ptr<PoolThread>>> threads;
     };
 }
 

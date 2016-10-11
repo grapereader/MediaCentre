@@ -1,7 +1,7 @@
 CFLAGS=-Wall -std=c++11
 LDFLAGS= -lboost_system -lpthread
 
-OBJECTS=ControlServer.o HTTPServer.o ThreadPool.o
+OBJECTS=ControlServer.o HTTPServer.o ThreadPool.o String.o IO.o
 
 all: ctrl-server
 
@@ -16,6 +16,12 @@ HTTPServer.o: HTTPServer.cpp
 
 ThreadPool.o: ThreadPool.cpp
 	$(CXX) -c ThreadPool.cpp -o ThreadPool.o $(CFLAGS)
+
+String.o: String.cpp
+	$(CXX) -c String.cpp -o String.o $(CFLAGS)
+
+IO.o: IO.cpp
+	$(CXX) -c IO.cpp -o IO.o $(CFLAGS)
 
 clean:
 	rm *.o ctrl-server

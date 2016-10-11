@@ -4,44 +4,58 @@
 
 namespace vmc
 {
-    PoolThread::PoolThread(std::function<void(void)> const &func)
+    PoolThread::PoolThread(int id, std::function<void(void)> const &func)
     {
+        this->id = id;
         this->done = new std::atomic<bool>(false);
         auto donePtr = this->done;
-        this->thread = std::unique_ptr<std::thread>(new std::thread([donePtr, &func] {
+        this->thread = new std::thread([donePtr, &func] {
             func();
             *donePtr = true;
-        }));
+        });
     }
 
     PoolThread::~PoolThread()
     {
         delete this->done;
+        this->thread->join();
+        delete this->thread;
     }
 
-    std::atomic<bool> const *PoolThread::isDone() const { return this->done; }
+    bool PoolThread::isDone() const
+    {
+        return this->done->load(std::memory_order_relaxed);
+    }
 
-    ThreadPool::ThreadPool(int threads)
+    int PoolThread::getId() const
+    {
+        return this->id;
+    }
+
+    ThreadPool::ThreadPool(unsigned int threads)
     {
         this->threadCount = threads;
-        this->threads = std::unique_ptr<std::vector<PoolThread>>(new std::vector<PoolThread>());
+        this->threads = std::unique_ptr<std::vector<std::unique_ptr<PoolThread>>>(new std::vector<std::unique_ptr<PoolThread>>());
     }
 
     void ThreadPool::task(std::function<void(void)> const &func)
     {
         std::cout << "Thread pool currently using " << this->threads->size() << "/" << this->threadCount << " threads" << std::endl;
-        while (this->threads->size() >= this->threadCount)
+        
+        do
         {
-            for (std::vector<PoolThread>::iterator iter = this->threads->begin(); iter != this->threads->end(); iter++)
+            for (auto iter = this->threads->begin(); iter != this->threads->end(); iter++)
             {
-                if (iter->isDone())
+                if (iter->get()->isDone())
                 {
-                    std::cout << "Removing thread..." << std::endl;
+                    std::cout << "Cleaning up thread " << iter->get()->getId() << "..." << std::endl;
                     this->threads->erase(iter);
+                    break;
                 }
             }
-        }
-        PoolThread thread(func);
-        this->threads->push_back(thread);
+        } while (this->threads->size() >= this->threadCount);
+        
+        auto thread = std::unique_ptr<PoolThread>(new PoolThread(this->idCount++, func));
+        this->threads->push_back(std::move(thread));
     }
 }

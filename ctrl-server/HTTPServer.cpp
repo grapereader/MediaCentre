@@ -3,9 +3,13 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <string>
+#include <unordered_map>
+
 #include <boost/asio.hpp>
 
-#include "ThreadPool.h"
+#include "String.h"
+#include "IO.h"
 
 namespace asio = boost::asio;
 using asio::ip::tcp;
@@ -25,17 +29,60 @@ namespace vmc
         auto address = asio::ip::address::from_string(this->host);
         tcp::acceptor acceptor(ioService, tcp::endpoint(address, port));
 
-        auto pool = std::unique_ptr<ThreadPool>(new ThreadPool(4));
-
         while (true)
         {
-            tcp::socket client(ioService);
             std::cout << "Listening..." << std::endl;
-            acceptor.accept(client);
-            boost::system::error_code ignored;
-            boost::asio::write(client, boost::asio::buffer("Suh"), ignored);
-            std::cout << "Accepted client " << client.remote_endpoint() << std::endl;
-            pool->task(callback);
+            tcp::iostream *stream = new tcp::iostream();
+            acceptor.accept(*stream->rdbuf());
+            std::cout << "Accepted a new connection..." << std::endl;
+            
+            std::thread requestThread([callback, stream] {
+                std::string line;
+
+                io::getLineNoReturn(*stream, line);
+               
+                auto parts = string::split(line, " ");
+                
+                if (parts.size() == 3)
+                {
+                    std::string method = parts[0];
+                    std::string resource = parts[1];
+                    std::string version = parts[2];
+
+                    auto headers = std::shared_ptr<std::unordered_map<std::string, std::string>>(new std::unordered_map<std::string, std::string>());
+
+                    io::getLineNoReturn(*stream, line);
+                    while (line.length() > 0)
+                    {
+                        std::cout << line << std::endl;
+                        auto headerParts = string::split(line, ":", 1);
+                        
+                        if (headerParts.size() >= 2)
+                        {
+                            std::string key = string::trim(headerParts[0]);
+                            std::string val = string::trim(headerParts[1]);
+
+                            std::cout << "\"" << key << "\" -> \"" << val << "\"" << std::endl;
+                        }
+                        else
+                        {
+                            std::cout << "Malformed request header \"" << line << "\"" << std::endl;
+                        }
+
+                        io::getLineNoReturn(*stream, line);
+                    }
+                    
+                }
+                else
+                {
+                    std::cout << "Malformed HTTP request." << std::endl;
+                }
+
+                //callback();
+
+                delete stream;
+            });
+            requestThread.detach();
         }
     }
 }
