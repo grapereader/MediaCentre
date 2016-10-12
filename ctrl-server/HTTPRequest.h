@@ -22,12 +22,14 @@ namespace vmc
     class HTTPRequest
     {
     public:
-        HTTPRequest(method::HTTPMethod method, std::shared_ptr<HTTPHeaders> headers, tcp::iostream *stream);
+        HTTPRequest(method::HTTPMethod method, std::string const &resource, std::shared_ptr<HTTPHeaders> headers, tcp::iostream *stream);
         method::HTTPMethod getMethod() const;
+        std::string const *getResource() const;
         HTTPHeaders const *getHeaders() const;
         tcp::iostream *getStream();
     private:
         method::HTTPMethod method;
+        std::string resource;
         std::shared_ptr<HTTPHeaders> headers;
         tcp::iostream *stream;
     };

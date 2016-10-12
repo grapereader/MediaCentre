@@ -79,7 +79,7 @@ namespace vmc
                     if (reqMethodField.find("GET") != std::string::npos) methodType = method::GET;
                     else if (reqMethodField.find("POST") != std::string::npos) methodType = method::POST;
 
-                    HTTPRequest request(methodType, headers, stream);
+                    HTTPRequest request(methodType, resource, headers, stream);
 
                     callback(&request);
                 }
