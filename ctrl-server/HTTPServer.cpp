@@ -10,6 +10,7 @@
 
 #include "String.h"
 #include "IO.h"
+#include "HTTPRequest.h"
 
 namespace asio = boost::asio;
 using asio::ip::tcp;
@@ -23,7 +24,7 @@ namespace vmc
         this->port = port;
     }
 
-    void HTTPServer::listen(std::function<void(void)> callback)
+    void HTTPServer::listen(std::function<void(HTTPRequest*)> callback)
     {
         asio::io_service ioService;
         auto address = asio::ip::address::from_string(this->host);
@@ -49,7 +50,8 @@ namespace vmc
                     std::string resource = parts[1];
                     std::string version = parts[2];
 
-                    auto headers = std::shared_ptr<std::unordered_map<std::string, std::string>>(new std::unordered_map<std::string, std::string>());
+                    auto headers = std::shared_ptr<HTTPHeaders>(new HTTPHeaders());
+
 
                     io::getLineNoReturn(*stream, line);
                     while (line.length() > 0)
@@ -62,7 +64,7 @@ namespace vmc
                             std::string key = string::trim(headerParts[0]);
                             std::string val = string::trim(headerParts[1]);
 
-                            std::cout << "\"" << key << "\" -> \"" << val << "\"" << std::endl;
+                            headers->put(key, val);
                         }
                         else
                         {
@@ -71,14 +73,20 @@ namespace vmc
 
                         io::getLineNoReturn(*stream, line);
                     }
-                    
+
+                    method::HTTPMethod methodType = method::INVALID;
+                    std::string reqMethodField = string::toUpper(method);
+                    if (reqMethodField.find("GET") != std::string::npos) methodType = method::GET;
+                    else if (reqMethodField.find("POST") != std::string::npos) methodType = method::POST;
+
+                    HTTPRequest request(methodType, headers, stream);
+
+                    callback(&request);
                 }
                 else
                 {
                     std::cout << "Malformed HTTP request." << std::endl;
                 }
-
-                //callback();
 
                 delete stream;
             });

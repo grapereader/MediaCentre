@@ -4,13 +4,15 @@
 #include <string>
 #include <functional>
 
+#include "HTTPRequest.h"
+
 namespace vmc
 {
     class HTTPServer
     {
-    public:
+        public:
         HTTPServer(std::string const &host, int port);
-        void listen(std::function<void(void)> func);
+        void listen(std::function<void(HTTPRequest*)> func);
     private:
         std::string host;
         int port;

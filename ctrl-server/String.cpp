@@ -1,6 +1,7 @@
 #include "String.h"
 
 #include <iostream>
+#include <algorithm>
 
 namespace vmc
 {
@@ -64,6 +65,13 @@ namespace vmc
             }
 
             return replaced;
+        }
+
+        std::string toUpper(std::string const &str)
+        {
+            std::string upper(str);
+            std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
+            return upper;
         }
     }
 }
