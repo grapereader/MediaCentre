@@ -19,4 +19,14 @@ namespace vmc
     {
         this->map.erase(key);
     }
+
+    std::unordered_map<std::string, std::string>::const_iterator HTTPHeaders::begin() const
+    {
+        return this->map.begin();
+    }
+
+    std::unordered_map<std::string, std::string>::const_iterator HTTPHeaders::end() const
+    {
+        return this->map.end();
+    }
 }

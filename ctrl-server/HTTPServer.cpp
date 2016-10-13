@@ -56,7 +56,6 @@ namespace vmc
                     io::getLineNoReturn(*stream, line);
                     while (line.length() > 0)
                     {
-                        std::cout << line << std::endl;
                         auto headerParts = string::split(line, ":", 1);
                         
                         if (headerParts.size() >= 2)

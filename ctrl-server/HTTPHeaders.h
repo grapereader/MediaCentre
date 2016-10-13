@@ -13,6 +13,8 @@ namespace vmc
         void put(std::string const &key, std::string const &header);
         std::string const *get(std::string const &key) const;
         void remove(std::string const &key);
+        std::unordered_map<std::string, std::string>::const_iterator begin() const;
+        std::unordered_map<std::string, std::string>::const_iterator end() const;
     private:
         std::unordered_map<std::string, std::string> map;
     };

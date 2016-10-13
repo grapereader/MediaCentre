@@ -26,6 +26,7 @@ namespace vmc
         method::HTTPMethod getMethod() const;
         std::string const *getResource() const;
         HTTPHeaders const *getHeaders() const;
+        void sendResponseHeaders(int code, HTTPHeaders const &headers);
         tcp::iostream *getStream();
     private:
         method::HTTPMethod method;
