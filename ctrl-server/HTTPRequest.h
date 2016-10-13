@@ -24,10 +24,10 @@ namespace vmc
     public:
         HTTPRequest(method::HTTPMethod method, std::string const &resource, std::shared_ptr<HTTPHeaders> headers, tcp::iostream *stream);
         method::HTTPMethod getMethod() const;
-        std::string const *getResource() const;
-        HTTPHeaders const *getHeaders() const;
+        std::string const &getResource() const;
+        HTTPHeaders const &getHeaders() const;
         void sendResponseHeaders(int code, HTTPHeaders const &headers);
-        tcp::iostream *getStream();
+        tcp::iostream &getStream();
     private:
         method::HTTPMethod method;
         std::string resource;

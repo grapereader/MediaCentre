@@ -11,6 +11,7 @@ namespace vmc
     public:
         HTTPHeaders();
         void put(std::string const &key, std::string const &header);
+        void put(std::string const &key, long header);
         std::string const *get(std::string const &key) const;
         void remove(std::string const &key);
         std::unordered_map<std::string, std::string>::const_iterator begin() const;

@@ -1,7 +1,7 @@
 CFLAGS=-Wall -std=c++11
 LDFLAGS= -lboost_system -lpthread
 
-OBJECTS=ControlServer.o HTTPServer.o ThreadPool.o String.o IO.o HTTPHeaders.o HTTPRequest.o
+OBJECTS=ControlServer.o HTTPServer.o ThreadPool.o String.o IO.o HTTPHeaders.o HTTPRequest.o Router.o
 
 all: ctrl-server
 
@@ -28,6 +28,9 @@ HTTPHeaders.o: HTTPHeaders.cpp
 
 HTTPRequest.o: HTTPRequest.cpp
 	$(CXX) -c HTTPRequest.cpp -o HTTPRequest.o $(CFLAGS)
+
+Router.o: Router.cpp
+	$(CXX) -c Router.cpp -o Router.o $(CFLAGS)
 
 clean:
 	rm *.o ctrl-server

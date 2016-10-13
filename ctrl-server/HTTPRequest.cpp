@@ -17,19 +17,19 @@ namespace vmc
         return this->method;
     }
 
-    std::string const *HTTPRequest::getResource() const
+    std::string const &HTTPRequest::getResource() const
     {
-        return &this->resource;
+        return this->resource;
     }
 
-    HTTPHeaders const *HTTPRequest::getHeaders() const
+    HTTPHeaders const &HTTPRequest::getHeaders() const
     {
-        return this->headers.get();
+        return *this->headers.get();
     }
 
-    tcp::iostream *HTTPRequest::getStream()
+    tcp::iostream &HTTPRequest::getStream()
     {
-        return this->stream;
+        return *this->stream;
     }
 
 

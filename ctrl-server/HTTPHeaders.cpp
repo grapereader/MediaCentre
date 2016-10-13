@@ -10,6 +10,11 @@ namespace vmc
         this->map[key] = header;
     }
 
+    void HTTPHeaders::put(std::string const &key, long header)
+    {
+        this->map[key] = std::to_string(header);
+    }
+
     std::string const *HTTPHeaders::get(std::string const &key) const
     {
         return &this->map.at(key);

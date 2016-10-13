@@ -12,7 +12,7 @@ namespace vmc
     {
         public:
         HTTPServer(std::string const &host, int port);
-        void listen(std::function<void(HTTPRequest*)> func);
+        void listen(std::function<void(HTTPRequest&)> func);
     private:
         std::string host;
         int port;

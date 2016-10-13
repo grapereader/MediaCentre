@@ -24,7 +24,7 @@ namespace vmc
         this->port = port;
     }
 
-    void HTTPServer::listen(std::function<void(HTTPRequest*)> callback)
+    void HTTPServer::listen(std::function<void(HTTPRequest&)> callback)
     {
         asio::io_service ioService;
         auto address = asio::ip::address::from_string(this->host);
@@ -80,7 +80,7 @@ namespace vmc
 
                     HTTPRequest request(methodType, resource, headers, stream);
 
-                    callback(&request);
+                    callback(request);
                 }
                 else
                 {

@@ -14,6 +14,8 @@ namespace vmc
         std::string replace(std::string const &str, std::string const &what, std::string const &with);
         std::string replace(std::string const &str, std::string const &what, std::string const &with, int count);
         std::string toUpper(std::string const &str);        
+        bool startsWith(std::string const &str, std::string const &toFind);
+        bool contains(std::string const &str, std::string const &toFind);
     }
 }
 

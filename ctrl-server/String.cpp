@@ -73,5 +73,15 @@ namespace vmc
             std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
             return upper;
         }
+
+        bool startsWith(std::string const &str, std::string const &toFind)
+        {
+            return str.find(toFind) == 0;
+        }
+
+        bool contains(std::string const &str, std::string const &toFind)
+        {
+            return str.find(toFind) != std::string::npos;
+        }
     }
 }
