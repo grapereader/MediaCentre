@@ -82,6 +82,65 @@ namespace vmc
             }
         }
 
+        max = 0;
+        route = "";
+        std::function<void(HTTPRequest &, std::vector<std::string> const &, std::unordered_map<std::string, std::string> const &)> callback;
+        for (auto it = this->routes.begin(); it != this->routes.end(); it++)
+        {
+            std::string currRoute = it->first;
+            if (string::startsWith(resourceUpper, currRoute))
+            {
+                auto routeData = it->second;
+                auto methods = routeData.first;
+                bool compatible = false;
+                
+                for (unsigned int i = 0; i < methods.size(); i++)
+                {
+                    if (methods[i] == request.getMethod())
+                    {
+                        compatible = true;
+                        break;
+                    }
+                }
+
+                if (compatible && currRoute.length() > max)
+                {
+                    max = currRoute.length();
+                    route = currRoute;
+                    callback = routeData.second;
+                }
+            }
+        }
+
+        if (max > 0)
+        {
+            std::string paramString = request.getResource().substr(route.length(), request.getResource().length() - route.length());
+            auto urlParts = string::split(paramString, "?", 1);
+            std::unordered_map<std::string, std::string> urlParams;
+            if (urlParts.size() > 1)
+            {
+                std::string queryString = urlParts[1];
+                auto queryParts = string::split(queryString, "&");
+                for (unsigned int i = 0; i < queryParts.size(); i++)
+                {
+                    std::string param = queryParts[i];
+                    std::vector<std::string> keyVal = string::split(param, "=", 1);
+                    if (keyVal.size() >= 2)
+                    {
+                        urlParams[keyVal[0]] = keyVal[1];
+                    }
+                }
+            }
+            std::string pathString = urlParts[0];
+            if (string::startsWith(pathString, "/")) pathString = pathString.substr(1, pathString.length() - 1);
+
+            auto pathParts = string::split(pathString, "/");
+
+            callback(request, pathParts, urlParams);
+            return;
+        }
+        
+
         std::cout << "Router: Could not find a route for \"" << request.getResource() << "\"" << std::endl;
         request.sendResponseHeaders(404, responseHeaders);
         request.getStream() << "<h1>Error - 404</h1><hr>\r\n";
@@ -89,9 +148,9 @@ namespace vmc
 
     }
 
-    void Router::route(std::vector<method::HTTPMethod> const &methods, std::string const &path, std::function<void(method::HTTPMethod, HTTPHeaders const &, std::vector<std::string> const &, std::unordered_map<std::string, std::string> const &)> callback)
+    void Router::route(std::vector<method::HTTPMethod> const &methods, std::string const &path, std::function<void(HTTPRequest &, std::vector<std::string> const &, std::unordered_map<std::string, std::string> const &)> callback)
     {
-        this->routes[string::toUpper(path)] = callback; 
+        this->routes[string::toUpper(path)] = std::pair<std::vector<method::HTTPMethod>, std::function<void(HTTPRequest &, std::vector<std::string> const &, std::unordered_map<std::string, std::string> const &)>>(methods, callback); 
     }
 
     void Router::routeStaticFolder(std::string const &path, std::string const &folder)
