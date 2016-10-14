@@ -1,4 +1,4 @@
-CFLAGS=-Wall -std=c++11
+CFLAGS=-Wall -std=c++11 -I../vendor
 LDFLAGS= -lboost_system -lpthread
 
 OBJECTS=ControlServer.o HTTPServer.o ThreadPool.o String.o IO.o HTTPHeaders.o HTTPRequest.o Router.o
