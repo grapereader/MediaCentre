@@ -1,0 +1,3 @@
+[submodule "ctrl-server/vendor/variant"]
+	path = ctrl-server/vendor/variant
+	url = https://github.com/boostorg/variant

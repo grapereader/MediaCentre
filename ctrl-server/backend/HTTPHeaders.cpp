@@ -1,5 +1,7 @@
 #include "HTTPHeaders.h"
 
+#include "String.h"
+
 namespace vmc
 {
     HTTPHeaders::HTTPHeaders()
@@ -7,22 +9,27 @@ namespace vmc
 
     void HTTPHeaders::put(std::string const &key, std::string const &header)
     {
-        this->map[key] = header;
+        this->map[string::toUpper(key)] = header;
     }
 
     void HTTPHeaders::put(std::string const &key, long header)
     {
-        this->map[key] = std::to_string(header);
+        this->map[string::toUpper(key)] = std::to_string(header);
     }
 
-    std::string const *HTTPHeaders::get(std::string const &key) const
+    bool HTTPHeaders::exists(std::string const &key) const
     {
-        return &this->map.at(key);
+        return this->map.count(string::toUpper(key));
+    }
+
+    std::string const &HTTPHeaders::get(std::string const &key) const
+    {
+        return this->map.at(string::toUpper(key));
     }
 
     void HTTPHeaders::remove(std::string const &key)
     {
-        this->map.erase(key);
+        this->map.erase(string::toUpper(key));
     }
 
     std::unordered_map<std::string, std::string>::const_iterator HTTPHeaders::begin() const

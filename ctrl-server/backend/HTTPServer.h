@@ -3,8 +3,10 @@
 
 #include <string>
 #include <functional>
+#include <memory>
 
 #include "HTTPRequest.h"
+#include "SessionManager.h"
 
 namespace vmc
 {
@@ -16,6 +18,7 @@ namespace vmc
     private:
         std::string host;
         int port;
+        std::shared_ptr<SessionManager> sessionManager;
     };
 }
 #endif

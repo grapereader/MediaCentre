@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <algorithm>
+#include <random>
+#include <chrono>
 
 namespace vmc
 {
@@ -22,7 +24,7 @@ namespace vmc
             while (left.length() > 0 && done++ < count)
             {
                 auto index = left.find(delim);
-                
+
                 if (index == std::string::npos) break;
 
                 std::string match = left.substr(0, index);
@@ -30,7 +32,7 @@ namespace vmc
 
                 parts.push_back(match);
             }
-            
+
             parts.push_back(left);
 
             return parts;
@@ -49,7 +51,7 @@ namespace vmc
 
         std::string replace(std::string const &str, std::string const &what, std::string const &with)
         {
-            return replace(str, what, with, str.length());            
+            return replace(str, what, with, str.length());
         }
 
         std::string replace(std::string const &str, std::string const &what, std::string const &with, int count)
@@ -82,6 +84,27 @@ namespace vmc
         bool contains(std::string const &str, std::string const &toFind)
         {
             return str.find(toFind) != std::string::npos;
+        }
+
+        std::string random(int length)
+        {
+            return random(length, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890");
+        }
+
+        std::string random(int length, std::string const &options)
+        {
+            unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+            std::default_random_engine generator(seed);
+            std::uniform_int_distribution<int> distribution(0, options.length() - 1);
+
+            std::string rString;
+            for (int i = 0; i < length; i++)
+            {
+                int pos = distribution(generator);
+                rString.append(options.substr(pos, 1));
+            }
+
+            return rString;
         }
     }
 }
