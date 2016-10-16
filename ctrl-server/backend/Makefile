@@ -2,7 +2,8 @@ CFLAGS=-Wall -std=c++11 -I../vendor/json/include -I../vender/variant/include
 LDFLAGS= -lboost_system -lpthread
 
 OBJECTS=ControlServer.o HTTPServer.o ThreadPool.o String.o IO.o \
-		HTTPHeaders.o HTTPRequest.o Router.o Session.o SessionManager.o
+		HTTPHeaders.o HTTPRequest.o Router.o Session.o SessionManager.o \
+		Application.o
 
 all: ctrl-server
 
@@ -11,6 +12,9 @@ ctrl-server: $(OBJECTS)
 
 ControlServer.o: ControlServer.cpp
 	$(CXX) -c ControlServer.cpp -o ControlServer.o $(CFLAGS)
+
+Application.o: Application.cpp
+	$(CXX) -c Application.cpp -o Application.o $(CFLAGS)
 
 HTTPServer.o: HTTPServer.cpp
 	$(CXX) -c HTTPServer.cpp -o HTTPServer.o $(CFLAGS)
