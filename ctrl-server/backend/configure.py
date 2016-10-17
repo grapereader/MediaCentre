@@ -8,8 +8,8 @@ for f in glob.glob("*.cpp"):
     objects += f.replace(".cpp", ".o") + " ";
     sourceFiles.append(f);
 
-cflags = "-Wall -std=c++11 -I../vendor/json/include"
-ldflags = "-lboost_system -lboost_filesystem -lpthread"
+cflags = "-Wall -std=c++11 -I../vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++"
+ldflags = "-lboost_system -lboost_filesystem -lpthread -lmysqlpp -lmysqlclient"
 exe = "ctrl-server"
 
 with open("Makefile", "w") as f:

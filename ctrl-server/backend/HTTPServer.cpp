@@ -1,16 +1,17 @@
 #include "HTTPServer.h"
 
 #include <iostream>
-#include <thread>
-#include <vector>
 #include <string>
+#include <thread>
 #include <unordered_map>
+#include <vector>
 
 #include <boost/asio.hpp>
 
-#include "String.h"
-#include "IO.h"
 #include "HTTPRequest.h"
+#include "HTTPUtils.h"
+#include "IO.h"
+#include "String.h"
 
 namespace asio = boost::asio;
 using asio::ip::tcp;
@@ -26,7 +27,7 @@ namespace vmc
         this->sessionManager = std::shared_ptr<SessionManager>(new SessionManager());
     }
 
-    void HTTPServer::listen(std::function<void(HTTPRequest&)> callback)
+    void HTTPServer::listen(std::function<void(HTTPRequest &)> callback)
     {
         asio::io_service ioService;
         auto address = asio::ip::address::from_string(this->host);
@@ -56,7 +57,6 @@ namespace vmc
 
                     auto headers = std::shared_ptr<HTTPHeaders>(new HTTPHeaders());
 
-
                     io::getLineNoReturn(*stream, line);
                     while (line.length() > 0)
                     {
@@ -79,16 +79,28 @@ namespace vmc
 
                     method::HTTPMethod methodType = method::INVALID;
                     std::string reqMethodField = string::toUpper(method);
-                    if (reqMethodField.find("GET") != std::string::npos) methodType = method::GET;
-                    else if (reqMethodField.find("POST") != std::string::npos) methodType = method::POST;
+                    if (reqMethodField.find("GET") != std::string::npos)
+                        methodType = method::GET;
+                    else if (reqMethodField.find("POST") != std::string::npos)
+                        methodType = method::POST;
 
                     HTTPRequest request(methodType, resource, headers, stream, sessionManager);
 
-                    callback(request);
+                    try
+                    {
+                        callback(request);
+                    }
+                    catch (std::exception e)
+                    {
+                        *stream << "HTTP 500 " << util::getStatus(500) << "\r\n\r\n";
+                        *stream << "An exception was thrown while processing your request\r\n";
+                    }
                 }
                 else
                 {
                     std::cout << "Malformed HTTP request." << std::endl;
+                    *stream << "HTTP 400 " << util::getStatus(400) << "\r\n\r\n";
+                    *stream << "Malformed HTTP request\r\n";
                 }
 
                 delete stream;
