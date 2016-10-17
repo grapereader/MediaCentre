@@ -9,7 +9,7 @@ for f in glob.glob("*.cpp"):
     sourceFiles.append(f);
 
 cflags = "-Wall -std=c++11 -I../vendor/json/include"
-ldflags = "-lboost_system -lpthread"
+ldflags = "-lboost_system -lboost_filesystem -lpthread"
 exe = "ctrl-server"
 
 with open("Makefile", "w") as f:

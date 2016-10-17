@@ -86,7 +86,8 @@ int main(int argc, char **argv)
     }
 
     syslog(LOG_NOTICE, "Starting the vmc application...");
-    vmc::start(config);
+    vmc::Config conf(config);
+    vmc::start(&conf);
 
     return 0;
 }
