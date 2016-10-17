@@ -1,3 +1,5 @@
+#include <syslog.h>
+
 #include "Application.h"
 
 #include "HTTPServer.h"
@@ -5,7 +7,7 @@
 
 namespace vmc
 {
-    void start()
+    void start(char const *configFile)
     {
         auto server = std::unique_ptr<vmc::HTTPServer>(new vmc::HTTPServer("0.0.0.0", 8080));
         auto router = std::unique_ptr<vmc::Router>(new vmc::Router(server.get()));
@@ -30,6 +32,8 @@ namespace vmc
             request.getStream() << resp << "\r\n";
         });
 
+        syslog(LOG_NOTICE, "Starting the router...");
         router->start();
+        syslog(LOG_NOTICE, "Quitting.");
     }
 }

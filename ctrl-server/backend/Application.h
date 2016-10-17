@@ -3,7 +3,7 @@
 
 namespace vmc
 {
-    void start();
+    void start(char const *configFile);
 }
 
 #endif
