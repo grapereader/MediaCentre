@@ -4,6 +4,7 @@
 
 #include "Database.h"
 #include "HTTPServer.h"
+#include "HTTPUtils.h"
 #include "Router.h"
 
 namespace vmc
@@ -18,6 +19,12 @@ namespace vmc
             new vmc::HTTPServer(config->get().at("http").at("host"), config->get().at("http").at("port")));
         auto router = std::unique_ptr<vmc::Router>(new vmc::Router(server.get()));
         router->routeStaticFolder("/client", "../frontend");
+
+        router->route({vmc::method::GET}, "/",
+            [](vmc::HTTPRequest &request, std::vector<std::string> const &urlParts,
+                          std::unordered_map<std::string, std::string> const &urlParams) {
+                vmc::util::redirect(request, "/client/index.html");
+            });
 
         router->route({vmc::method::GET}, "/test",
             [](vmc::HTTPRequest &request, std::vector<std::string> const &urlParts,

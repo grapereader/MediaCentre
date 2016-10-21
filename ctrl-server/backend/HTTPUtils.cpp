@@ -41,5 +41,11 @@ namespace vmc
 
             return "";
         }
+
+        void redirect(HTTPRequest &req, std::string const &location)
+        {
+            req.getResponseHeaders()->put("Location", location);
+            req.sendResponseHeaders(307);
+        }
     }
 }
