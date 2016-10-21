@@ -1,7 +1,4 @@
-#include <syslog.h>
-
 #include "Application.h"
-
 #include "Database.h"
 #include "HTTPServer.h"
 #include "HTTPUtils.h"
@@ -42,8 +39,6 @@ namespace vmc
                 request.getStream() << resp << "\r\n";
             });
 
-        syslog(LOG_NOTICE, "Starting the router...");
         router->start();
-        syslog(LOG_NOTICE, "Quitting.");
     }
 }
