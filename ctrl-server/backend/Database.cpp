@@ -58,4 +58,33 @@ namespace vmc
         }
         return query.store();
     }
+
+    namespace database
+    {
+        std::string const *host;
+        int port;
+        std::string const *user;
+        std::string const *pass;
+        std::string const *database;
+        bool createDatabase;
+        bool createTables;
+
+        void initDatabase(std::string const &host, int port, std::string const &user, std::string const &pass,
+            std::string const &database, bool createDatabase, bool createTables)
+        {
+            database::host = new std::string(host);
+            database::port = port;
+            database::user = new std::string(user);
+            database::pass = new std::string(pass);
+            database::database = new std::string(database);
+            database::createDatabase = createDatabase;
+            database::createTables = createTables;
+        }
+
+        std::unique_ptr<Database> getDatabase()
+        {
+            return std::unique_ptr<Database>(
+                new Database(*host, port, *user, *pass, *database, createTables, createDatabase));
+        }
+    }
 }

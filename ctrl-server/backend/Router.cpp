@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "String.h"
 #include "IO.h"
+#include "String.h"
 
 namespace vmc
 {
@@ -14,9 +14,7 @@ namespace vmc
 
     void Router::start()
     {
-        this->server->listen([this](HTTPRequest &request) {
-            this->handleRequest(request);
-        });
+        this->server->listen([this](HTTPRequest &request) { this->handleRequest(request); });
     }
 
     void Router::handleRequest(HTTPRequest &request)
@@ -27,7 +25,8 @@ namespace vmc
             std::string filePath = this->fileRoutes[resourceUpper];
             if (io::fileExists(filePath))
             {
-                std::cout << "Router: Routing \"" << resourceUpper << "\" to static file \"" << filePath << "\"" << std::endl;
+                std::cout << "Router: Routing \"" << resourceUpper << "\" to static file \"" << filePath << "\""
+                          << std::endl;
                 auto size = io::getFileSize(filePath);
                 request.getResponseHeaders()->put("Content-Length", size);
                 request.sendResponseHeaders(200);
@@ -56,7 +55,8 @@ namespace vmc
 
         if (max > 0)
         {
-            std::string relative = request.getResource().substr(route.length(), request.getResource().length() - route.length());
+            std::string relative =
+                request.getResource().substr(route.length(), request.getResource().length() - route.length());
             if (string::startsWith(relative, "/")) relative = relative.substr(1, relative.length() - 1);
 
             if (string::startsWith(relative, "../") || string::contains(relative, "/../"))
@@ -72,7 +72,8 @@ namespace vmc
 
             if (io::fileExists(file))
             {
-                std::cout << "Router: Routing \"" << resourceUpper << "\" to file in static folder \"" << file << "\"" << std::endl;
+                std::cout << "Router: Routing \"" << resourceUpper << "\" to file in static folder \"" << file << "\""
+                          << std::endl;
                 request.getResponseHeaders()->put("Content-Length", io::getFileSize(file));
                 request.sendResponseHeaders(200);
                 io::writeFileToStream(file, request.getStream());
@@ -112,7 +113,8 @@ namespace vmc
 
         if (max > 0)
         {
-            std::string paramString = request.getResource().substr(route.length(), request.getResource().length() - route.length());
+            std::string paramString =
+                request.getResource().substr(route.length(), request.getResource().length() - route.length());
             auto urlParts = string::split(paramString, "?", 1);
             std::unordered_map<std::string, std::string> urlParams;
             if (urlParts.size() > 1)
@@ -139,17 +141,17 @@ namespace vmc
             return;
         }
 
-
         std::cout << "Router: Could not find a route for \"" << request.getResource() << "\"" << std::endl;
         request.sendResponseHeaders(404);
         request.getStream() << "<h1>Error - 404</h1><hr>\r\n";
         request.getStream() << "Could not find the requested resource \"" << request.getResource() << "\"...\r\n";
-
     }
 
-    void Router::route(std::vector<method::HTTPMethod> const &methods, std::string const &path, RouterCallback const &callback)
+    void Router::route(
+        std::vector<method::HTTPMethod> const &methods, std::string const &path, RouterCallback const &callback)
     {
-        this->routes[string::toUpper(path)] = std::pair<std::vector<method::HTTPMethod>, RouterCallback>(methods, callback);
+        this->routes[string::toUpper(path)] =
+            std::pair<std::vector<method::HTTPMethod>, RouterCallback>(methods, callback);
     }
 
     void Router::routeStaticFolder(std::string const &path, std::string const &folder)
