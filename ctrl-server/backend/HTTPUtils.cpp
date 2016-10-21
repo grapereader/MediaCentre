@@ -6,39 +6,41 @@ namespace vmc
     {
         char const *getStatus(int code)
         {
-            if (code == 200) return "OK";
-            if (code == 201) return "Created";
-            if (code == 202) return "Accepted";
-            if (code == 204) return "No Content";
-            if (code == 206) return "Partial Content";
+            switch (code)
+            {
+                case 200: return "OK";
+                case 201: return "Created";
+                case 202: return "Accepted";
+                case 204: return "No Content";
+                case 206: return "Partial Content";
 
-            if (code == 301) return "Moved Permanently";
-            if (code == 302) return "Found";
-            if (code == 303) return "See Other";
-            if (code == 304) return "Not Modified";
-            if (code == 307) return "Temporary Redirect";
-            if (code == 308) return "Permanent Redirect";
+                case 301: return "Moved Permanently";
+                case 302: return "Found";
+                case 303: return "See Other";
+                case 304: return "Not Modified";
+                case 307: return "Temporary Redirect";
+                case 308: return "Permanent Redirect";
 
-            if (code == 400) return "Bad Request";
-            if (code == 401) return "Unauthorized";
-            if (code == 403) return "Forbidden";
-            if (code == 404) return "Not Found";
-            if (code == 405) return "Method Not Allowed";
-            if (code == 406) return "Not Acceptable";
-            if (code == 408) return "Request Timeout";
-            if (code == 409) return "Conflict";
-            if (code == 411) return "Length Required";
-            if (code == 412) return "Precondition Failed";
-            if (code == 413) return "Payload Too Large";
-            if (code == 415) return "Unsupported Media Type";
+                case 400: return "Bad Request";
+                case 401: return "Unauthorized";
+                case 403: return "Forbidden";
+                case 404: return "Not Found";
+                case 405: return "Method Not Allowed";
+                case 406: return "Not Acceptable";
+                case 408: return "Request Timeout";
+                case 409: return "Conflict";
+                case 411: return "Length Required";
+                case 412: return "Precondition Failed";
+                case 413: return "Payload Too Large";
+                case 415: return "Unsupported Media Type";
 
-            if (code == 500) return "Internal Server Error";
-            if (code == 501) return "Not Implemented";
-            if (code == 502) return "Bad Gateway";
-            if (code == 503) return "Service Unavailable";
-            if (code == 505) return "HTTP Version Not Supported";
-            if (code == 507) return "Insufficient Storage";
-
+                case 500: return "Internal Server Error";
+                case 501: return "Not Implemented";
+                case 502: return "Bad Gateway";
+                case 503: return "Service Unavailable";
+                case 505: return "HTTP Version Not Supported";
+                case 507: return "Insufficient Storage";
+            }
             return "";
         }
 
