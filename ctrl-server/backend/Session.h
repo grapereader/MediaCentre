@@ -1,12 +1,12 @@
 #ifndef SESSION_H
 #define SESSION_H
 
-#include <ctime>
-#include <unordered_map>
-#include <string>
 #include <boost/variant.hpp>
+#include <ctime>
 #include <memory>
 #include <mutex>
+#include <string>
+#include <unordered_map>
 
 namespace vmc
 {
@@ -38,6 +38,7 @@ namespace vmc
             this->variables[key] = val;
             this->variablesMutex.unlock();
         }
+
     private:
         std::string sessionId;
         std::time_t createdTime;
