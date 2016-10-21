@@ -61,30 +61,33 @@ namespace vmc
 
     namespace database
     {
-        std::string const *host;
-        int port;
-        std::string const *user;
-        std::string const *pass;
-        std::string const *database;
-        bool createDatabase;
-        bool createTables;
+        namespace conf
+        {
+            std::string const *host;
+            int port;
+            std::string const *user;
+            std::string const *pass;
+            std::string const *database;
+            bool createDatabase;
+            bool createTables;
+        }
 
         void initDatabase(std::string const &host, int port, std::string const &user, std::string const &pass,
             std::string const &database, bool createDatabase, bool createTables)
         {
-            database::host = new std::string(host);
-            database::port = port;
-            database::user = new std::string(user);
-            database::pass = new std::string(pass);
-            database::database = new std::string(database);
-            database::createDatabase = createDatabase;
-            database::createTables = createTables;
+            conf::host = new std::string(host);
+            conf::port = port;
+            conf::user = new std::string(user);
+            conf::pass = new std::string(pass);
+            conf::database = new std::string(database);
+            conf::createDatabase = createDatabase;
+            conf::createTables = createTables;
         }
 
         std::unique_ptr<Database> getDatabase()
         {
-            return std::unique_ptr<Database>(
-                new Database(*host, port, *user, *pass, *database, createTables, createDatabase));
+            return std::unique_ptr<Database>(new Database(*conf::host, conf::port, *conf::user, *conf::pass,
+                *conf::database, conf::createTables, conf::createDatabase));
         }
     }
 }
