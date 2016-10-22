@@ -20,6 +20,23 @@ namespace vmc
         router->route({vmc::method::GET}, "/",
             [](auto request, auto urlParts, auto urlParams) { vmc::util::redirect(request, "/client/index.html"); });
 
+        router->route({vmc::method::GET}, "/initDatabase",
+            [](auto request, auto urlParts, auto urlParams) {
+                request.getResponseHeaders()->put("Content-Type", "text/plain");
+                request.sendResponseHeaders(200);
+                auto *stream = &request.getStream();
+                *stream << "Initializing database...\r\n";
+                try
+                {
+                    auto db = database::getDatabase();
+                    *stream << "Got database\r\n";
+                }
+                catch (std::exception e)
+                {
+                    *stream << "Error while getting database connection\r\n";
+                }
+            });
+
         router->route({vmc::method::GET}, "/test",
             [](auto request, auto urlParts, auto urlParams) {
                 auto session = request.initSession();
