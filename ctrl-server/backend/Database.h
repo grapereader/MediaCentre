@@ -13,7 +13,7 @@ namespace vmc
     {
     public:
         Database(std::string const &host, int port, std::string const &user, std::string const &pass,
-            std::string const &database, bool createTables = true, bool createDatabase = true);
+            std::string const &database, bool createDatabase = true);
         sql::Query query(std::string const &queryString);
         sql::SimpleResult execute(std::string const &queryString, sql::SQLQueryParms *params = NULL);
         sql::UseQueryResult use(std::string const &queryString, sql::SQLQueryParms *params = NULL);
@@ -26,7 +26,7 @@ namespace vmc
     namespace database
     {
         void initDatabase(std::string const &host, int port, std::string const &user, std::string const &pass,
-            std::string const &database, bool createDatabase = true, bool createTables = true);
+            std::string const &database, bool createDatabase = true);
 
         std::unique_ptr<Database> getDatabase();
     }

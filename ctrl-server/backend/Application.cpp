@@ -10,7 +10,7 @@ namespace vmc
     {
         auto dbConf = config->get().at("database");
         database::initDatabase(dbConf.at("host"), dbConf.at("port"), dbConf.at("user"), dbConf.at("pass"),
-            dbConf.at("database"), true, true);
+            dbConf.at("database"), true);
 
         auto server = std::unique_ptr<vmc::HTTPServer>(
             new vmc::HTTPServer(config->get().at("http").at("host"), config->get().at("http").at("port")));

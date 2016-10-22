@@ -5,7 +5,7 @@
 namespace vmc
 {
     Database::Database(std::string const &host, int port, std::string const &user, std::string const &pass,
-        std::string const &database, bool createTables, bool createDatabase)
+        std::string const &database, bool createDatabase)
         : connection(false)
     {
         this->connection.connect(NULL, host.c_str(), user.c_str(), pass.c_str());
@@ -69,11 +69,10 @@ namespace vmc
             std::string const *pass;
             std::string const *database;
             bool createDatabase;
-            bool createTables;
         }
 
         void initDatabase(std::string const &host, int port, std::string const &user, std::string const &pass,
-            std::string const &database, bool createDatabase, bool createTables)
+            std::string const &database, bool createDatabase)
         {
             conf::host = new std::string(host);
             conf::port = port;
@@ -81,13 +80,12 @@ namespace vmc
             conf::pass = new std::string(pass);
             conf::database = new std::string(database);
             conf::createDatabase = createDatabase;
-            conf::createTables = createTables;
         }
 
         std::unique_ptr<Database> getDatabase()
         {
             return std::unique_ptr<Database>(new Database(*conf::host, conf::port, *conf::user, *conf::pass,
-                *conf::database, conf::createTables, conf::createDatabase));
+                *conf::database, conf::createDatabase));
         }
     }
 }
