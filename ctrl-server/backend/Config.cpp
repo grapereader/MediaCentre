@@ -5,21 +5,19 @@
 
 namespace vmc
 {
-    auto defaultConfig = R"(
-    {
-        "http": {
-            "host": "0.0.0.0",
-            "port": 8080
+    json defaultConfig = {
+        {"http", {
+            {"host", "0.0.0.0"},
+            {"port", 8080}}
         },
-        "database": {
-            "host": "localhost",
-            "port": 3306,
-            "user": "username",
-            "pass": "password",
-            "database": "vmc"
+        {"database", {
+            {"host", "localhost"},
+            {"port", 3306},
+            {"user", "username"},
+            {"pass", "password"},
+            {"database", "vmc"}}
         }
-    }
-    )";
+    };
 
     Config::Config(char const *path)
     {
@@ -45,7 +43,7 @@ namespace vmc
             std::ofstream out(path);
             if (out)
             {
-                out << defaultConfig;
+                out << defaultConfig.dump(4);
                 out.close();
             }
             else
@@ -53,9 +51,7 @@ namespace vmc
                 std::cout << "Could not write config file" << std::endl;
             }
 
-            std::stringstream stream;
-            stream << defaultConfig;
-            this->configData = json::parse(stream);
+            this->configData = defaultConfig;
         }
     }
 
