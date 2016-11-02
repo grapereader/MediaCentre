@@ -15,7 +15,10 @@ namespace vmc
         auto server = std::unique_ptr<vmc::HTTPServer>(
             new vmc::HTTPServer(config->get().at("http").at("host"), config->get().at("http").at("port")));
         auto router = std::unique_ptr<vmc::Router>(new vmc::Router(server.get()));
-        router->routeStaticFolder("/client", "../frontend");
+
+        auto frontendFolder = config->get().at("frontend").at("folder");
+        std::cout << "Using static frontend asset folder " << frontendFolder << std::endl;
+        router->routeStaticFolder("/client", frontendFolder);
 
         router->route({vmc::method::GET}, "/",
             [](auto request, auto urlParts, auto urlParams) { vmc::util::redirect(request, "/client/index.html"); });

@@ -16,6 +16,9 @@ namespace vmc
             {"user", "username"},
             {"pass", "password"},
             {"database", "vmc"}}
+        },
+        {"frontend", {
+            {"folder", "../"}}
         }
     };
 
