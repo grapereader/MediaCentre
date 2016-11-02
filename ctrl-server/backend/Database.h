@@ -1,7 +1,10 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <mysql++.h>
+#pragma GCC diagnostic pop
 #include <memory>
 #include <string>
 
