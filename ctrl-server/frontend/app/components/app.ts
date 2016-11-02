@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 @Component({
-  selector: 'application',
-  template: '<h1>ViaWare Media Centre</h1>'
+    selector: 'application',
+    templateUrl: 'app/templates/app.html'
 })
-export class AppComponent { }
+export class AppComponent {
+    title = "ViaWare Media Centre";
+}
