@@ -4,6 +4,17 @@
 #include <string>
 #include "HTTPRequest.h"
 
+#define QUIT(request, code) {\
+    request.sendResponseHeaders(code);\
+    return;\
+}
+
+#define QUIT_MSG(request, code, msg) {\
+    request.sendResponseHeaders(code);\
+    request.getStream() << msg;\
+    return;\
+}
+
 namespace vmc
 {
     namespace util

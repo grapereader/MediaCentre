@@ -9,7 +9,7 @@ for f in glob.glob("*.cpp"):
     sourceFiles.append(f);
 
 cflags = "-Wall -std=c++1y -I../vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++"
-ldflags = "-lboost_system -lboost_filesystem -lpthread -lmysqlpp -lmysqlclient"
+ldflags = "-lboost_system -lboost_filesystem -lpthread -lmysqlpp -lmysqlclient -lcryptopp"
 exe = "ctrl-server"
 
 with open("Makefile", "w") as f:

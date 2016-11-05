@@ -29,32 +29,46 @@ namespace vmc
         return this->connection.query(queryString);
     }
 
-    sql::SimpleResult Database::execute(std::string const &queryString, sql::SQLQueryParms *params)
+    void loadParams(sql::SQLQueryParms &sqlParams, std::initializer_list<sql::SQLTypeAdapter> params)
+    {
+        for (auto it = params.begin(); it != params.end(); it++)
+        {
+            sqlParams << *it;
+        }
+    }
+
+    sql::SimpleResult Database::execute(std::string const &queryString, std::initializer_list<sql::SQLTypeAdapter> params)
     {
         auto query = this->query(queryString);
-        if (params != NULL)
+        if (params.size() > 0)
         {
-            return query.execute(*params);
+            sql::SQLQueryParms sqlParams(&query);
+            loadParams(sqlParams, params);
+            return query.execute(sqlParams);
         }
         return query.execute();
     }
 
-    sql::UseQueryResult Database::use(std::string const &queryString, sql::SQLQueryParms *params)
+    sql::UseQueryResult Database::use(std::string const &queryString, std::initializer_list<sql::SQLTypeAdapter> params)
     {
         auto query = this->query(queryString);
-        if (params != NULL)
+        if (params.size() > 0)
         {
-            return query.use(*params);
+            sql::SQLQueryParms sqlParams(&query);
+            loadParams(sqlParams, params);
+            return query.use(sqlParams);
         }
         return query.use();
     }
 
-    sql::StoreQueryResult Database::store(std::string const &queryString, sql::SQLQueryParms *params)
+    sql::StoreQueryResult Database::store(std::string const &queryString, std::initializer_list<sql::SQLTypeAdapter> params)
     {
         auto query = this->query(queryString);
-        if (params != NULL)
+        if (params.size() > 0)
         {
-            return query.store(*params);
+            sql::SQLQueryParms sqlParams(&query);
+            loadParams(sqlParams, params);
+            return query.store(sqlParams);
         }
         return query.store();
     }
