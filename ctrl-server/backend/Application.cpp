@@ -4,6 +4,7 @@
 #include "HTTPUtils.h"
 #include "Router.h"
 #include "String.h"
+#include "DatabaseInit.h"
 
 namespace vmc
 {
@@ -12,6 +13,7 @@ namespace vmc
         auto dbConf = config->get().at("database");
         database::initDatabase(
             dbConf.at("host"), dbConf.at("port"), dbConf.at("user"), dbConf.at("pass"), dbConf.at("database"), true);
+        database::initTables();
 
         auto server = std::unique_ptr<vmc::HTTPServer>(
             new vmc::HTTPServer(config->get().at("http").at("host"), config->get().at("http").at("port")));
