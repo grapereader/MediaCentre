@@ -42,6 +42,7 @@ namespace vmc
         auto query = this->query(queryString);
         if (params.size() > 0)
         {
+            query.parse();
             sql::SQLQueryParms sqlParams(&query);
             loadParams(sqlParams, params);
             return query.execute(sqlParams);
@@ -54,6 +55,7 @@ namespace vmc
         auto query = this->query(queryString);
         if (params.size() > 0)
         {
+            query.parse();
             sql::SQLQueryParms sqlParams(&query);
             loadParams(sqlParams, params);
             return query.use(sqlParams);
@@ -66,6 +68,7 @@ namespace vmc
         auto query = this->query(queryString);
         if (params.size() > 0)
         {
+            query.parse();
             sql::SQLQueryParms sqlParams(&query);
             loadParams(sqlParams, params);
             return query.store(sqlParams);
