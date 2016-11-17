@@ -3,6 +3,7 @@
 
 #include <string>
 #include "HTTPRequest.h"
+#include <json.hpp>
 
 #define QUIT(request, code) {\
     request.sendResponseHeaders(code);\
@@ -21,6 +22,7 @@ namespace vmc
     {
         char const *getStatus(int code);
         void redirect(HTTPRequest &req, std::string const &location);
+        void sendJSON(HTTPRequest &req, nlohmann::json const &json);
     }
 }
 

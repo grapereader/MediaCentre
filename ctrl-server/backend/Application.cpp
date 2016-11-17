@@ -1,10 +1,10 @@
 #include "Application.h"
 #include "Database.h"
+#include "DatabaseInit.h"
 #include "HTTPServer.h"
 #include "HTTPUtils.h"
 #include "Router.h"
 #include "String.h"
-#include "DatabaseInit.h"
 
 namespace vmc
 {
@@ -26,22 +26,45 @@ namespace vmc
         router->route({vmc::method::GET}, "/",
             [](auto request, auto urlParts, auto urlParams) { vmc::util::redirect(request, "/client/index.html"); });
 
+        router->route({vmc::method::GET}, "/loginStatus",
+            [](auto request, auto urlParts, auto urlParams) {
+                std::shared_ptr<Session> session = request.initSession();
+
+                json response = {{"loggedIn", false}};
+
+                if (session->exists("authenticated") && session->get<bool>("authenticated"))
+                {
+                    response["loggedIn"] = true;
+                    response["user"] = session->get<std::string>("username");
+                    if (session->exists("email"))
+                    {
+                        response["email"] = session->get<std::string>("email");
+                    }
+                }
+
+                util::sendJSON(request, response);
+            });
+
         router->route({vmc::method::POST}, "/login",
             [](auto request, auto urlParts, auto urlParams) {
                 if (urlParams.count("user") == 0)
                     QUIT_MSG(request, 400, "{ \"okay\": false, \"error\": \"Bad request\" }");
 
+                json response = {};
                 std::string user = urlParams.at("user");
                 if (user == "guest")
                 {
                     std::shared_ptr<Session> session = request.initSession();
                     session->put("authenticated", true);
                     session->put("access-level", 1);
+                    session->put<std::string>("username", "Guest");
+                    response["okay"] = true;
+                    response["user"] = {{"name", "Guest"}};
                 }
                 else
                 {
                     auto db = database::getDatabase();
-                    auto query = db->store("SELECT * FROM users WHERE name = %0q", { user });
+                    auto query = db->store("SELECT * FROM users WHERE username = %0q", {user});
 
                     if (!query || query.num_rows() == 0)
                     {
@@ -50,23 +73,11 @@ namespace vmc
 
                     auto userData = query[0];
 
-                    json response = {
-                        {"okay", true},
-                        {"user", {
-                            {"name", userData["username"].data()},
-                            {"email", userData["email"].data()}
-                        }}
-                    };
-
-                    std::string jsonString = response.dump(4);
-
-                    request.getResponseHeaders()->put("Content-Type", "application/json");
-                    request.getResponseHeaders()->put("Content-Length", jsonString.length());
-
-                    request.sendResponseHeaders(200);
-                    request.getStream() << jsonString;
-
+                    response["okay"] = true;
+                    response["user"] = {{"name", userData["username"].data()}, {"email", userData["email"].data()}};
                 }
+
+                util::sendJSON(request, response);
             });
 
         router->route({vmc::method::GET}, "/initDatabase",

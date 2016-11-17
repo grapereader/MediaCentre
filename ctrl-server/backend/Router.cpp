@@ -131,6 +131,33 @@ namespace vmc
                     }
                 }
             }
+
+            if (request.getMethod() == method::POST && request.getHeaders().exists("Content-Type"))
+            {
+                std::string type = request.getHeaders().get("Content-Type");
+                bool urlEncoded = string::contains(type, "form-urlencoded");
+                if (urlEncoded)
+                {
+                    if (!request.getHeaders().exists("Content-Length"))
+                    {
+                        request.sendResponseHeaders(411);
+                        return;
+                    }
+                    int length = std::stoi(request.getHeaders().get("Content-Length"));
+                    std::string body(length, 0);
+                    request.getStream().read(&body[0], length);
+                    auto postParts = string::split(body, "&");
+                    for (auto it = postParts.begin(); it != postParts.end(); it++)
+                    {
+                        auto postParam = string::split(*it, "=");
+                        if (postParam.size() >= 2)
+                        {
+                            urlParams[postParam[0]] = postParam[1];
+                        }
+                    }
+                }
+            }
+
             std::string pathString = urlParts[0];
             if (string::startsWith(pathString, "/")) pathString = pathString.substr(1, pathString.length() - 1);
 

@@ -49,5 +49,14 @@ namespace vmc
             req.getResponseHeaders()->put("Location", location);
             req.sendResponseHeaders(307);
         }
+
+        void sendJSON(HTTPRequest &req, nlohmann::json const &json)
+        {
+            std::string jsonString  = json.dump(4);
+            req.getResponseHeaders()->put("Content-Length", jsonString.length());
+            req.getResponseHeaders()->put("Content-Type", "application/json");
+            req.sendResponseHeaders(200);
+            req.getStream() << jsonString;
+        }
     }
 }
