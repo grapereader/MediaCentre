@@ -1,2 +1,2 @@
 ctrl-server
-backend/Makefile
+backend/**/Makefile

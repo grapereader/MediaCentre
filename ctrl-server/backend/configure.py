@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 import glob, os
+from subprocess import Popen
+vmcLibs = ["vmc-libserver"]
+vmcLibsFiles = ""
+
+for lib in vmcLibs:
+    Popen(["python", "configure.py"], cwd="./" + lib)
+    vmcLibsFiles = vmcLibsFiles + lib + "/" + lib + ".a "
 
 objects = "";
 sourceFiles = [];
@@ -9,6 +16,8 @@ for f in glob.glob("*.cpp"):
     sourceFiles.append(f);
 
 cflags = "-Wall -std=c++1y -I../vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++"
+for lib in vmcLibs:
+    cflags += " -I./" + lib
 ldflags = "-lboost_system -lboost_filesystem -lpthread -lmysqlpp -lmysqlclient -lcryptopp"
 exe = "ctrl-server"
 
@@ -18,10 +27,16 @@ with open("Makefile", "w") as f:
     f.write("\n")
     f.write("OBJECTS=" + objects + "\n")
     f.write("\n")
-    f.write("all: " + exe + "\n")
+    f.write("all:")
+    for lib in vmcLibs:
+        f.write(" " + lib + "/" + lib + ".a")
+    f.write(" " + exe + "\n")
+    for lib in vmcLibs:
+        f.write(lib + "/" + lib + ".a:\n")
+        f.write("\t+$(MAKE) -C " + lib + "\n")
     f.write("\n")
     f.write(exe + ": $(OBJECTS)\n");
-    f.write("\t$(CXX) -o " + exe + " $(OBJECTS) $(LDFLAGS)\n")
+    f.write("\t$(CXX) -o " + exe + " $(OBJECTS) " + vmcLibsFiles + "$(LDFLAGS)\n")
     for source in sourceFiles:
         obj = source.replace(".cpp", ".o")
         f.write("\n")
