@@ -16,8 +16,6 @@ for f in glob.glob("*.cpp"):
     sourceFiles.append(f);
 
 cflags = "-Wall -std=c++1y -I../vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++"
-for lib in vmcLibs:
-    cflags += " -I./" + lib
 ldflags = "-lboost_system -lboost_filesystem -lpthread -lmysqlpp -lmysqlclient -lcryptopp"
 exe = "ctrl-server"
 
@@ -45,3 +43,5 @@ with open("Makefile", "w") as f:
     f.write("\n")
     f.write("clean:\n")
     f.write("\trm *.o " + exe + "\n")
+    for lib in vmcLibs:
+        f.write("\t+$(MAKE) -C " + lib + " clean\n")

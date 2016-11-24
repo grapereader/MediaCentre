@@ -1,7 +1,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "Config.h"
+#include "vmc-libserver/Config.h"
 
 namespace vmc
 {
