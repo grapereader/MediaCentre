@@ -1,6 +1,7 @@
 #include "IO.h"
 
 #include <fstream>
+#include <boost/filesystem.hpp>
 
 #define COPY_BUFFER_LEN 4096
 
@@ -8,7 +9,7 @@ namespace vmc
 {
     namespace io
     {
-        std::istream &getLineNoReturn(std::istream &stream, std::string &string)        
+        std::istream &getLineNoReturn(std::istream &stream, std::string &string)
         {
             std::getline(stream, string);
             string.assign(string::replace(string, "\r", ""));
@@ -19,7 +20,7 @@ namespace vmc
         {
             std::ifstream file(path, std::ifstream::binary);
             char *buffer = new char[COPY_BUFFER_LEN];
-            
+
             while (!file.eof())
             {
                 file.read(buffer, COPY_BUFFER_LEN);
@@ -39,7 +40,7 @@ namespace vmc
 
         bool fileExists(std::string const &path)
         {
-            return std::ifstream(path).good();
+            return boost::filesystem::is_regular(boost::filesystem::path(path));
         }
     }
 }
