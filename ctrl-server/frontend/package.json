@@ -1,7 +1,9 @@
 {
   "name": "ctrl-frontend",
   "version": "0.0.1",
-  "scripts": {},
+  "scripts": {
+      "start": "browserify app/main.js -o app.js"
+  },
   "dependencies": {
     "bootstrap": "^3.3.7"
   },
