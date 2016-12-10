@@ -2,10 +2,12 @@
   "name": "ctrl-frontend",
   "version": "0.0.1",
   "scripts": {
-      "start": "browserify app/main.js -o app.js"
+    "start": "watchify app/main.js -o app.js &",
+    "build": "browserify app/main.js -o app.js"
   },
   "dependencies": {
-    "bootstrap": "^3.3.7"
+    "bootstrap": "^3.3.7",
+    "vue": "^2.1.4"
   },
   "devDependencies": {}
 }
