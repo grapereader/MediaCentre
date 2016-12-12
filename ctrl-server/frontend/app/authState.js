@@ -6,8 +6,7 @@ var authState = {
         username: undefined,
         email: undefined,
         privilege: 0,
-        loginMessage: "",
-        actionSuccess: undefined
+        message: false
     },
     mutations: {
         authLogin: function(state, details) {
@@ -22,8 +21,7 @@ var authState = {
             state.privilege = 0;
         },
         authSetMessage: function(state, msg) {
-            state.loginMessage = msg.text;
-            state.actionSuccess = msg.success;
+            state.message = msg;
         }
     },
     actions: {
@@ -39,21 +37,15 @@ var authState = {
                         text: "Login successful",
                         success: true
                     });
-                } else {
-                    var msg = "Login failed";
-                    if (response.data.msg != undefined) {
-                        msg = response.data.msg;
-                    }
-                    context.commit("authSetMessage", {
-                        text: msg,
-                        success: false
-                    })
+
                 }
             }).catch(function(error) {
-                context.commit("authSetMessage", {
-                    text: error,
-                    success: false
-                });
+                if (error.response) {
+                    context.commit("authSetMessage", {
+                        text: error.response.data.error,
+                        success: false
+                    });
+                }
             });
         },
         authLogout: function(context) {

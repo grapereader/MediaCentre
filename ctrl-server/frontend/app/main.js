@@ -22,23 +22,45 @@ var Home = {
 var Login = {
     template: require("./templates/login.html"),
     methods: {
+        setMessage: function(msg) {
+            this.$store.commit("authSetMessage", msg);
+        },
         loginSubmit: function(event) {
             if (this.username.length <= 0 || this.password.length <= 0) {
-                this.message = {
+                this.setMessage({
                     success: false,
-                    msg: "Missing login details"
-                };
+                    text: "Missing login details"
+                });
                 return;
             }
 
-            this.message = {
+            this.setMessage({
                 success: true,
-                msg: "Logging in..."
-            };
+                text: "Logging in..."
+            });
 
             this.$store.dispatch("authLogin", {
                 username: this.username,
                 password: this.password
+            });
+        },
+        guestSubmit: function(event) {
+            if (this.displayName.length <= 0) {
+                this.setMessage({
+                    success: false,
+                    text: "Please enter a display name for guest access"
+                });
+                return;
+            }
+
+            this.setMessage({
+                success: true,
+                text: "Logging in..."
+            });
+
+            this.$store.dispatch("authLogin", {
+                username: "guest",
+                displayName: this.displayName
             });
         }
     },
@@ -46,7 +68,12 @@ var Login = {
         return {
             username: "",
             password: "",
-            message: false
+            displayName: ""
+        }
+    },
+    computed: {
+        message: function() {
+            return this.$store.state.auth.message;
         }
     }
 };

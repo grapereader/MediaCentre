@@ -45,12 +45,17 @@ namespace vmc
                         std::shared_ptr<Session> session = request.initSession();
                         if (user == "guest")
                         {
+                            std::string displayName = "Guest";
+                            if (requestJson.count("display-name") > 0)
+                            {
+                                displayName = requestJson["display-name"];
+                            }
                             session->put("authenticated", true);
                             session->put("access-level", 1);
-                            session->put<std::string>("username", "Guest");
+                            session->put("username", displayName);
                             response["okay"] = true;
                             response["user"] = {
-                                {"username", "Guest"},
+                                {"username", displayName},
                                 {"privilege", 1}
                             };
                         }
