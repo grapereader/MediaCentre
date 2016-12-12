@@ -8,8 +8,30 @@
         <link rel="stylesheet" href="assets/styles.css">
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
         <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="app.js"></script>
     </head>
     <body>
+        <div class="container" id="app">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-light bg-faded">
+                        <router-link class="navbar-brand" to="/">VMC Control</router-link>
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item active">
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav float-xs-right">
+                            <li class="nav-item">
+                                <router-link class="nav-link" to="/login">Login</router-link>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <p>
+            <div class="row">
+                <router-view></router-view>
+            </div>
+        </div>
+        <script src="app.js"></script>
     </body>
 </html>
