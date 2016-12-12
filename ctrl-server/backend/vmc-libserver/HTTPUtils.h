@@ -16,6 +16,10 @@
     return;\
 }
 
+#define QUIT_BAD_REQUEST(request) {\
+    QUIT_MSG(request, 400, "{ \"okay\": false, \"error\": \"Bad request\" }");\
+}
+
 namespace vmc
 {
     namespace util

@@ -5,6 +5,7 @@
 #include <boost/asio.hpp>
 #include "HTTPHeaders.h"
 #include "SessionManager.h"
+#include "PostData.h"
 
 using boost::asio::ip::tcp;
 
@@ -30,6 +31,9 @@ namespace vmc
         std::shared_ptr<Session> initSession();
         void sendResponseHeaders(int code);
         tcp::iostream &getStream();
+        bool hasPostData() const;
+        PostData const *getPostData() const;
+        void setPostData(std::unique_ptr<PostData> postData);
     private:
         method::HTTPMethod method;
         std::string resource;
@@ -37,6 +41,8 @@ namespace vmc
         std::shared_ptr<HTTPHeaders> responseHeaders;
         tcp::iostream *stream;
         std::shared_ptr<SessionManager> sessionManager;
+        bool _hasPostData;
+        std::unique_ptr<PostData> postData;
     };
 }
 

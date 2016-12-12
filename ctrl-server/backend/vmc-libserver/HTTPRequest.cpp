@@ -12,6 +12,7 @@ namespace vmc
         this->stream = stream;
         this->sessionManager = sessionManager;
         this->responseHeaders = std::shared_ptr<HTTPHeaders>(new HTTPHeaders());
+        this->_hasPostData = false;
     }
 
     method::HTTPMethod HTTPRequest::getMethod() const
@@ -54,5 +55,21 @@ namespace vmc
             *this->stream << it->first << ": " << it->second << "\r\n";
         }
         *this->stream << "\r\n";
+    }
+
+    void HTTPRequest::setPostData(std::unique_ptr<PostData> postData)
+    {
+        this->_hasPostData = true;
+        this->postData = std::move(postData);
+    }
+
+    PostData const *HTTPRequest::getPostData() const
+    {
+        return this->postData.get();
+    }
+
+    bool HTTPRequest::hasPostData() const
+    {
+        return this->_hasPostData;
     }
 }

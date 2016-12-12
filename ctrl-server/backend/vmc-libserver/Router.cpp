@@ -132,6 +132,8 @@ namespace vmc
                 }
             }
 
+            auto postData = std::unique_ptr<PostData>(new PostData());
+
             if (request.getMethod() == method::POST && request.getHeaders().exists("Content-Type"))
             {
                 std::string type = request.getHeaders().get("Content-Type");
@@ -143,6 +145,9 @@ namespace vmc
                         request.sendResponseHeaders(411);
                         return;
                     }
+
+                    std::unordered_map<std::string, std::string> postUrlParams;
+
                     int length = std::stoi(request.getHeaders().get("Content-Length"));
                     std::string body(length, 0);
                     request.getStream().read(&body[0], length);
@@ -152,9 +157,32 @@ namespace vmc
                         auto postParam = string::split(*it, "=");
                         if (postParam.size() >= 2)
                         {
-                            urlParams[postParam[0]] = postParam[1];
+                            postUrlParams[postParam[0]] = postParam[1];
                         }
                     }
+
+                    postData->setUrl(postUrlParams);
+                }
+
+                bool jsonData = string::contains(type, "json");
+                if (jsonData)
+                {
+                    if (!request.getHeaders().exists("Content-Length"))
+                    {
+                        request.sendResponseHeaders(411);
+                        return;
+                    }
+
+                    int length = std::stoi(request.getHeaders().get("Content-Length"));
+                    std::string body(length, 0);
+                    request.getStream().read(&body[0], length);
+                    json jsonParams = json::parse(body);
+                    postData->setJson(jsonParams);
+                }
+
+                if (postData->hasUrlData() || postData->hasJsonData())
+                {
+                    request.setPostData(std::move(postData));
                 }
             }
 

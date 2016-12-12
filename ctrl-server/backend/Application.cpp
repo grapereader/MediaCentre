@@ -28,10 +28,12 @@ namespace vmc
         routes::auth::route(*router);
 
         router->route({vmc::method::GET}, "/",
-            [](auto request, auto urlParts, auto urlParams) { vmc::util::redirect(request, "/client/index.html"); });
+            [](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
+                vmc::util::redirect(request, "/client/index.html");
+            });
 
         router->route({vmc::method::GET}, "/test",
-            [](auto request, auto urlParts, auto urlParams) {
+            [](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
                 auto session = request.initSession();
                 std::string greeting = "Meh. Strangers are lame...";
                 if (session->exists("greeting"))

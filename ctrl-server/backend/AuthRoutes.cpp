@@ -2,6 +2,7 @@
 
 #include "vmc-libserver/Database.h"
 #include "vmc-libserver/HTTPUtils.h"
+#include "vmc-libserver/Auth.h"
 
 using json = nlohmann::json;
 
@@ -14,7 +15,7 @@ namespace vmc
             void route(Router &router)
             {
                 router.route({vmc::method::GET}, "/loginStatus",
-                    [](auto request, auto urlParts, auto urlParams) {
+                    [](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
                         std::shared_ptr<Session> session = request.initSession();
 
                         json response = {{"loggedIn", false}};
@@ -22,7 +23,7 @@ namespace vmc
                         if (session->exists("authenticated") && session->get<bool>("authenticated"))
                         {
                             response["loggedIn"] = true;
-                            response["user"] = session->get<std::string>("username");
+                            response["username"] = session->get<std::string>("username");
                             if (session->exists("email"))
                             {
                                 response["email"] = session->get<std::string>("email");
@@ -33,23 +34,30 @@ namespace vmc
                     });
 
                 router.route({vmc::method::POST}, "/login",
-                    [](auto request, auto urlParts, auto urlParams) {
-                        if (urlParams.count("user") == 0)
-                            QUIT_MSG(request, 400, "{ \"okay\": false, \"error\": \"Bad request\" }");
+                    [](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
+                        if (!request.hasPostData() || !request.getPostData()->hasJsonData()) QUIT_BAD_REQUEST(request);
+
+                        json requestJson = request.getPostData()->getJson();
+                        if (requestJson.count("username") == 0) QUIT_BAD_REQUEST(request);
 
                         json response = {};
-                        std::string user = urlParams.at("user");
+                        std::string user = requestJson["username"];
+                        std::shared_ptr<Session> session = request.initSession();
                         if (user == "guest")
                         {
-                            std::shared_ptr<Session> session = request.initSession();
                             session->put("authenticated", true);
                             session->put("access-level", 1);
                             session->put<std::string>("username", "Guest");
                             response["okay"] = true;
-                            response["user"] = {{"name", "Guest"}};
+                            response["user"] = {
+                                {"username", "Guest"},
+                                {"privilege", 1}
+                            };
                         }
                         else
                         {
+                            if (requestJson.count("password") == 0) QUIT_BAD_REQUEST(request);
+
                             auto db = database::getDatabase();
                             auto query = db->store("SELECT * FROM users WHERE username = %0q", {user});
 
@@ -60,16 +68,32 @@ namespace vmc
 
                             auto userData = query[0];
 
-                            response["okay"] = true;
-                            response["user"] = {
-                                {"name", userData["username"].data()}, {"email", userData["email"].data()}};
+                            auto hash = (const char *) userData["password"];
+                            std::string password = requestJson["password"];
+                            auto validPassword = vmc::auth::comparePassword(hash, password);
+
+                            response["okay"] = validPassword;
+
+                            if (validPassword)
+                            {
+                                response["user"] = {
+                                    {"username", (const char *) userData["username"]},
+                                    {"email", (const char *) userData["email"]},
+                                    {"privilege", (int) userData["privilege"]}
+                                };
+
+                                session->put("authenticated", true);
+                                session->put("access-level", (int) userData["privilege"]);
+                                session->put<std::string>("username", (const char *) userData["username"]);
+                                session->put<std::string>("email", (const char *) userData["email"]);
+                            }
                         }
 
                         util::sendJSON(request, response);
                     });
 
                 router.route({vmc::method::POST}, "/logout",
-                    [](HTTPRequest &request, auto urlParts, auto urlParams) {
+                    [](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
                         auto session = request.initSession();
                         session->put("authenticated", false);
                         session->put("access-level", 0);
