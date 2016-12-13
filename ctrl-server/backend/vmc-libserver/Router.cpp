@@ -180,10 +180,7 @@ namespace vmc
                     postData->setJson(jsonParams);
                 }
 
-                if (postData->hasUrlData() || postData->hasJsonData())
-                {
-                    request.setPostData(std::move(postData));
-                }
+                request.setPostData(std::move(postData));
             }
 
             std::string pathString = urlParts[0];
