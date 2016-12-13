@@ -22,13 +22,17 @@ var authState = {
         },
         authSetMessage: function(state, msg) {
             state.message = msg;
+        },
+        authClearMessage: function(state) {
+            state.message = false;
         }
     },
     actions: {
         authLogin: function(context, details) {
-            axios.post("/login", {
+            return axios.post("/login", {
                 username: details.username,
-                password: details.password
+                password: details.password,
+                displayName: details.displayName
             }).then(function(response) {
                 if (response.data.okay) {
                     var userData = response.data.user;
@@ -49,7 +53,7 @@ var authState = {
             });
         },
         authLogout: function(context) {
-            axios.post("/logout", {}).then(function(response) {
+            return axios.post("/logout", {}).then(function(response) {
                 if (response.data.okay) {
                     context.commit("authLogout");
                     context.commit("authSetMessage", {
@@ -70,7 +74,7 @@ var authState = {
             });
         },
         authRefresh: function(context) {
-            axios.get("/loginStatus", {}).then(function(response) {
+            return axios.get("/loginStatus", {}).then(function(response) {
                 if (response.data.loggedIn) {
                     var details = {
                         username: response.data.username,

@@ -46,9 +46,9 @@ namespace vmc
                         if (user == "guest")
                         {
                             std::string displayName = "Guest";
-                            if (requestJson.count("display-name") > 0)
+                            if (requestJson.count("displayName") > 0)
                             {
-                                displayName = requestJson["display-name"];
+                                displayName = requestJson["displayName"];
                             }
                             session->put("authenticated", true);
                             session->put("access-level", 1);

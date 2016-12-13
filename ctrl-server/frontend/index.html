@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="assets/styles.css">
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
         <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
     </head>
     <body>
@@ -20,9 +21,19 @@
                             </li>
                         </ul>
                         <ul class="nav navbar-nav float-xs-right">
-                            <li class="nav-item">
-                                <router-link class="nav-link" to="/login">Login</router-link>
-                            </li>
+                            <template v-if="isLoggedIn === false">
+                                <li class="nav-item">
+                                    <router-link class="nav-link" to="/login">Login</router-link>
+                                </li>
+                            </template>
+                            <template v-else>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="javascript:void();" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ userData.username }}</a>
+                                    <div class="dropdown-menu">
+                                        <a v-on:click="logout()" class="dropdown-item" href="javascript:void();">Logout</a>
+                                    </div>
+                                </li>
+                            </template>
                         </ul>
                     </nav>
                 </div>
