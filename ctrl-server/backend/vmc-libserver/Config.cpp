@@ -19,7 +19,10 @@ namespace vmc
         },
         {"frontend", {
             {"folder", "../"}}
-        }
+        },
+        {"app", {
+            {"registration", true},
+        }}
     };
 
     Config::Config(char const *path)
