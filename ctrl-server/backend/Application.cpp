@@ -32,23 +32,11 @@ namespace vmc
                 vmc::util::redirect(request, "/client/index.html");
             });
 
-        router->route({vmc::method::GET}, "/test",
-            [](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
-                auto session = request.initSession();
-                std::string greeting = "Meh. Strangers are lame...";
-                if (session->exists("greeting"))
-                {
-                    greeting = session->template get<std::string>("greeting");
-                }
-                std::string resp = "Hello there... <p>";
-                resp.append(greeting);
+        router->route({vmc::method::GET}, "/config",
+            [config](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
+                json appConfig = config->get().at("app");
 
-                session->template put<std::string>("greeting", "Hey, you've been here before!");
-
-                request.getResponseHeaders()->put("Content-Length", resp.length());
-                request.sendResponseHeaders(200);
-
-                request.getStream() << resp << "\r\n";
+                util::sendJSON(request, appConfig);
             });
 
         router->start();

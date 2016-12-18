@@ -1,5 +1,5 @@
 var Login = {
-    template: require("./templates/login.html"),
+    template: require("../templates/login.html"),
     methods: {
         setMessage: function(msg) {
             this.$store.commit("authSetMessage", msg);

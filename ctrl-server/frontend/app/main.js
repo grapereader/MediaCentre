@@ -5,67 +5,9 @@ var Vuex = require("vuex")
 Vue.use(VueRouter);
 Vue.use(Vuex);
 
-var authState = require("./authState.js").authState;
+var store = require("./store.js").store;
 
-var store = new Vuex.Store({
-    modules: {
-        auth: authState
-    }
-});
-
-
-var Home = {
-    template: require("./templates/home.html")
-};
-
-var Login = require("./loginComponent.js").Login;
-
-var Dashboard = {
-    template: require("./templates/dash.html")
-}
-
-var routes = [
-{
-    path: "/",
-    component: Home,
-    meta: {
-        authOnly: false
-    }
-},
-{
-    path: "/login",
-    component: Login,
-    meta: {
-        authOnly: false
-    }
-},
-{
-    path: "/dash",
-    component: Dashboard,
-    meta: {
-        authOnly: true
-    }
-}
-];
-
-var router = new VueRouter({
-    routes: routes
-});
-
-router.beforeEach(function(to, from, next) {
-    store.commit("authClearMessage");
-    store.dispatch("authRefresh").then(function() {
-        if (to.meta.authOnly && !store.state.auth.loggedIn) {
-            store.commit("authSetMessage", {
-                success: false,
-                text: "You must be logged in to access this page"
-            });
-            next("/login");
-        } else {
-            next();
-        }
-    });
-});
+var router = require("./router.js").router;
 
 var app = new Vue({
     store: store,
