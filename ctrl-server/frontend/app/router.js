@@ -3,6 +3,7 @@ var VueRouter = require("vue-router");
 var Home = require("./components/home.js").Home;
 var Login = require("./components/login.js").Login;
 var Dashboard = require("./components/dash.js").Dashboard;
+var Register = require("./components/register.js").Register;
 
 var store = require("./store.js").store;
 
@@ -22,6 +23,13 @@ var routes = [
     }
 },
 {
+    path: "/register",
+    component: Register,
+    meta: {
+        authOnly: false
+    }
+},
+{
     path: "/dash",
     component: Dashboard,
     meta: {
@@ -36,6 +44,7 @@ var router = new VueRouter({
 
 router.beforeEach(function(to, from, next) {
     store.commit("authClearMessage");
+    store.dispatch("configRefresh");
     store.dispatch("authRefresh").then(function() {
         if (to.meta.authOnly && !store.state.auth.loggedIn) {
             store.commit("authSetMessage", {

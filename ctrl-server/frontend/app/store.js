@@ -1,10 +1,12 @@
 var Vuex = require("vuex")
 
-var authState = require("./authState.js").authState;
+var authState = require("./state/auth.js").authState;
+var configState = require("./state/config.js").configState;
 
 var store = new Vuex.Store({
     modules: {
-        auth: authState
+        auth: authState,
+        config: configState
     }
 });
 

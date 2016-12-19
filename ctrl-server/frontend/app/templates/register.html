@@ -1,0 +1,37 @@
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Register</h4>
+                    <h6 class="card-subtitle text-muted">Register a new account</h6>
+                </div>
+                <div class="card-block">
+                    <form>
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input v-model="username" type="text" class="form-control" placeholder="Username"></input>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input v-model="password" type="password" class="form-control" placeholder="Password"></input>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input v-model="confirmPassword" type="password" class="form-control" placeholder="Confirm Password"></input>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input v-model="email" type="text" class="form-control" placeholder="Email"></input>
+                        </div>
+                        <div class="form-group">
+                            <input v-on:click="registerSubmit" type="button" class="btn btn-primary" value="Register"></input>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -61,6 +61,9 @@ var Login = {
     computed: {
         message: function() {
             return this.$store.state.auth.message;
+        },
+        registrationEnabled: function() {
+            return this.$store.state.config.registration;
         }
     }
 };

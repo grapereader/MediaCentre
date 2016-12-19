@@ -31,6 +31,9 @@
                         </div>
                         <div class="form-group">
                             <input v-on:click="loginSubmit" type="button" class="btn btn-primary" value="Login"></input>
+                            <template v-if="registrationEnabled">
+                                <router-link class="btn btn-primary" to="/register">Register</router-link>
+                            </template>
                         </div>
                     </form>
                 </div>
