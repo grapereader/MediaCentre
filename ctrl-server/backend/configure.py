@@ -42,6 +42,6 @@ with open("Makefile", "w") as f:
         f.write("\t$(CXX) -c " + source + " -o " + obj + " $(CFLAGS)\n")
     f.write("\n")
     f.write("clean:\n")
-    f.write("\trm *.o " + exe + "\n")
     for lib in vmcLibs:
         f.write("\t+$(MAKE) -C " + lib + " clean\n")
+    f.write("\trm *.o " + exe + "\n")
