@@ -16,6 +16,11 @@
     return;\
 }
 
+#define QUIT_JSON(request, code, json) {\
+    vmc::util::sendJSON(request, json, code);\
+    return;\
+}
+
 #define QUIT_BAD_REQUEST(request) {\
     QUIT_MSG(request, 400, "{ \"okay\": false, \"error\": \"Bad request\" }");\
 }
@@ -26,7 +31,7 @@ namespace vmc
     {
         char const *getStatus(int code);
         void redirect(HTTPRequest &req, std::string const &location);
-        void sendJSON(HTTPRequest &req, nlohmann::json const &json);
+        void sendJSON(HTTPRequest &req, nlohmann::json const &json, int code = 200);
     }
 }
 

@@ -64,6 +64,9 @@ var Login = {
         },
         registrationEnabled: function() {
             return this.$store.state.config.registration;
+        },
+        guestEnabled: function() {
+            return this.$store.state.config.guest;
         }
     }
 };

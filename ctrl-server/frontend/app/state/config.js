@@ -2,11 +2,13 @@ var axios = require("axios");
 
 var configState = {
     state: {
-        registration: false
+        registration: false,
+        guest: false
     },
     mutations: {
         configSet: function(state, config) {
             state.registration = config.registration;
+            state.guest = config.guest;
         }
     },
     actions: {

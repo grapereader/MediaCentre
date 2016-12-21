@@ -37,19 +37,20 @@
                         </div>
                     </form>
                 </div>
-                <div class="card-block">
-                    <p class="card-text">Or sign in as a guest for limited access</p>
-                    <form>
-                        <div class="form-group">
-                            <label for="login-username">Display Name</label>
-                            <input v-model="displayName" type="text" class="form-control" placeholder="Display Name"></input>
-                        </div>
-                        <div class="form-group">
-                            <input v-on:click="guestSubmit" type="button" class="btn btn-primary" value="Guest Access"></input>
-                        </div>
-                    </form>
-                </div>
-
+                <template v-if="guestEnabled">
+                    <div class="card-block">
+                        <p class="card-text">Or sign in as a guest for limited access</p>
+                        <form>
+                            <div class="form-group">
+                                <label for="login-username">Display Name</label>
+                                <input v-model="displayName" type="text" class="form-control" placeholder="Display Name"></input>
+                            </div>
+                            <div class="form-group">
+                                <input v-on:click="guestSubmit" type="button" class="btn btn-primary" value="Guest Access"></input>
+                            </div>
+                        </form>
+                    </div>
+                </template>
             </div>
         </div>
     </div>

@@ -22,6 +22,7 @@ namespace vmc
         },
         {"app", {
             {"registration", true},
+            {"guest", true}
         }}
     };
 

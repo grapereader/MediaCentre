@@ -73,6 +73,23 @@ var authState = {
                 });
             });
         },
+        authRegister: function(context, details) {
+            return axios.post("/register", details).then(function(response) {
+                if (response.data.okay) {
+                    context.commit("authSetMessage", {
+                        text: response.data.msg,
+                        success: true
+                    });
+                }
+            }).catch(function(error) {
+                if (error.response) {
+                    context.commit("authSetMessage", {
+                        text: error.response.data.msg,
+                        success: false
+                    });
+                }
+            });
+        },
         authRefresh: function(context) {
             return axios.get("/loginStatus", {}).then(function(response) {
                 if (response.data.loggedIn) {

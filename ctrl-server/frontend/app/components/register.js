@@ -11,7 +11,11 @@ var Register = {
     methods: {
         registerSubmit: function(event) {
             if (!this.validated) return;
-            alert("Register placeholder (" + this.username + "," + this.email + ")");
+            this.$store.dispatch("authRegister", {
+                username: this.username,
+                password: this.password,
+                email: this.email
+            });
         }
     },
     computed: {
@@ -19,7 +23,10 @@ var Register = {
             return this.password == this.confirmPassword;
         },
         validated: function() {
-            return this.passwordsMatch && this.username.length > 4 && this.password.length > 4 && this.email.length > 4;
+            return this.passwordsMatch && this.username.length >= 4 && this.password.length >= 8 && this.email.length >= 6;
+        },
+        message: function() {
+            return this.$store.state.auth.message;
         }
     }
 }

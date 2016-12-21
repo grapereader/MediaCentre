@@ -34,10 +34,8 @@ namespace vmc
 
         while (true)
         {
-            std::cout << "Listening..." << std::endl;
             tcp::iostream *stream = new tcp::iostream();
             acceptor.accept(*stream->rdbuf());
-            std::cout << "Accepted a new connection..." << std::endl;
 
             std::thread requestThread([callback, stream] {
                 std::string line;

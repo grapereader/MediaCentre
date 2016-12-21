@@ -25,7 +25,7 @@ namespace vmc
         std::cout << "Using static frontend asset folder " << frontendFolder << std::endl;
         router->routeStaticFolder("/client", frontendFolder);
 
-        routes::auth::route(*router);
+        routes::auth::route(*router, config);
 
         router->route({vmc::method::GET}, "/",
             [](RouterRequest &request) {

@@ -9,6 +9,18 @@
                     <h6 class="card-subtitle text-muted">Register a new account</h6>
                 </div>
                 <div class="card-block">
+                    <div v-if="message !== false">
+                        <template v-if="message.success === true">
+                            <div class="alert alert-success">
+                                {{ message.text }}
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="alert alert-danger">
+                                {{ message.text }}
+                            </div>
+                        </template>
+                    </div>
                     <form>
                         <div class="form-group">
                             <label>Username</label>

@@ -50,12 +50,12 @@ namespace vmc
             req.sendResponseHeaders(307);
         }
 
-        void sendJSON(HTTPRequest &req, nlohmann::json const &json)
+        void sendJSON(HTTPRequest &req, nlohmann::json const &json, int code)
         {
             std::string jsonString  = json.dump(4);
             req.getResponseHeaders()->put("Content-Length", jsonString.length());
             req.getResponseHeaders()->put("Content-Type", "application/json");
-            req.sendResponseHeaders(200);
+            req.sendResponseHeaders(code);
             req.getStream() << jsonString;
         }
     }
