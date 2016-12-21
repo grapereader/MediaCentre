@@ -15,7 +15,7 @@ namespace vmc
             void route(Router &router)
             {
                 router.route({vmc::method::GET}, "/loginStatus",
-                    [](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
+                    [](RouterRequest &request) {
                         std::shared_ptr<Session> session = request.initSession();
 
                         json response = {{"loggedIn", false}};
@@ -30,15 +30,15 @@ namespace vmc
                             }
                         }
 
-                        util::sendJSON(request, response);
+                        util::sendJSON(request.getRequest(), response);
                     });
 
                 router.route({vmc::method::POST}, "/login",
-                    [](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
-                        if (!request.hasPostData() || !request.getPostData()->hasJsonData()) QUIT_BAD_REQUEST(request);
+                    [](RouterRequest &request) {
+                        if (!request.getPostData().hasJsonData()) QUIT_BAD_REQUEST(request.getRequest());
 
-                        json requestJson = request.getPostData()->getJson();
-                        if (requestJson.count("username") == 0) QUIT_BAD_REQUEST(request);
+                        json requestJson = request.getPostData().getJson();
+                        if (requestJson.count("username") == 0) QUIT_BAD_REQUEST(request.getRequest());
 
                         json response = {};
                         std::string user = requestJson["username"];
@@ -61,14 +61,14 @@ namespace vmc
                         }
                         else
                         {
-                            if (requestJson.count("password") == 0) QUIT_BAD_REQUEST(request);
+                            if (requestJson.count("password") == 0) QUIT_BAD_REQUEST(request.getRequest());
 
                             auto db = database::getDatabase();
                             auto query = db->store("SELECT * FROM users WHERE username = %0q", {user});
 
                             if (!query || query.num_rows() == 0)
                             {
-                                QUIT_MSG(request, 406, "{\"okay\": false, \"error\": \"Invalid login\"}");
+                                QUIT_MSG(request.getRequest(), 406, "{\"okay\": false, \"error\": \"Invalid login\"}");
                             }
 
                             auto userData = query[0];
@@ -94,11 +94,11 @@ namespace vmc
                             }
                         }
 
-                        util::sendJSON(request, response);
+                        util::sendJSON(request.getRequest(), response);
                     });
 
                 router.route({vmc::method::POST}, "/logout",
-                    [](HTTPRequest &request, std::vector<std::string> const &urlParts, std::unordered_map<std::string, std::string> const &urlParams) {
+                    [](RouterRequest &request) {
                         auto session = request.initSession();
                         session->put("authenticated", false);
                         session->put("access-level", 0);
@@ -106,7 +106,7 @@ namespace vmc
                         json response = {};
                         response["okay"] = true;
                         response["msg"] = "Logged out successfully";
-                        util::sendJSON(request, response);
+                        util::sendJSON(request.getRequest(), response);
                     });
             }
         }

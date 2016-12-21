@@ -4,12 +4,11 @@
 #include <functional>
 
 #include "HTTPServer.h"
+#include "RouterRequest.h"
 
 namespace vmc
 {
-    typedef std::function<void(
-        HTTPRequest &, std::vector<std::string> const &, std::unordered_map<std::string, std::string> const &)>
-        RouterCallback;
+    typedef std::function<void(RouterRequest &)> RouterCallback;
 
     class Router
     {
@@ -30,6 +29,7 @@ namespace vmc
         std::unordered_map<std::string, std::string> fileRoutes;
 
         void handleRequest(HTTPRequest &request);
+        std::shared_ptr<SessionManager> sessionManager;
     };
 }
 

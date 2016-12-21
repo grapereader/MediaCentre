@@ -24,7 +24,6 @@ namespace vmc
         this->host = host;
         this->port = port;
 
-        this->sessionManager = std::shared_ptr<SessionManager>(new SessionManager());
     }
 
     void HTTPServer::listen(std::function<void(HTTPRequest &)> callback)
@@ -40,9 +39,7 @@ namespace vmc
             acceptor.accept(*stream->rdbuf());
             std::cout << "Accepted a new connection..." << std::endl;
 
-            auto sessionManager = this->sessionManager;
-
-            std::thread requestThread([sessionManager, callback, stream] {
+            std::thread requestThread([callback, stream] {
                 std::string line;
 
                 io::getLineNoReturn(*stream, line);
@@ -84,7 +81,7 @@ namespace vmc
                     else if (reqMethodField.find("POST") != std::string::npos)
                         methodType = method::POST;
 
-                    HTTPRequest request(methodType, resource, headers, stream, sessionManager);
+                    HTTPRequest request(methodType, resource, headers, stream);
 
                     try
                     {

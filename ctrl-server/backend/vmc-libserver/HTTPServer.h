@@ -18,7 +18,6 @@ namespace vmc
     private:
         std::string host;
         int port;
-        std::shared_ptr<SessionManager> sessionManager;
     };
 }
 #endif

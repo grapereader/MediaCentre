@@ -4,15 +4,13 @@
 
 namespace vmc
 {
-    HTTPRequest::HTTPRequest(method::HTTPMethod method, std::string const &resource, std::shared_ptr<HTTPHeaders> headers, tcp::iostream *stream, std::shared_ptr<SessionManager> sessionManager)
+    HTTPRequest::HTTPRequest(method::HTTPMethod method, std::string const &resource, std::shared_ptr<HTTPHeaders> headers, tcp::iostream *stream)
     {
         this->method = method;
         this->resource = resource;
         this->headers = headers;
         this->stream = stream;
-        this->sessionManager = sessionManager;
         this->responseHeaders = std::shared_ptr<HTTPHeaders>(new HTTPHeaders());
-        this->_hasPostData = false;
     }
 
     method::HTTPMethod HTTPRequest::getMethod() const
@@ -40,11 +38,6 @@ namespace vmc
         return *this->stream;
     }
 
-    std::shared_ptr<Session> HTTPRequest::initSession()
-    {
-        return session::init(*this->sessionManager, *this->headers, *this->responseHeaders);
-    }
-
     void HTTPRequest::sendResponseHeaders(int code)
     {
         char const *status = util::getStatus(code);
@@ -55,21 +48,5 @@ namespace vmc
             *this->stream << it->first << ": " << it->second << "\r\n";
         }
         *this->stream << "\r\n";
-    }
-
-    void HTTPRequest::setPostData(std::unique_ptr<PostData> postData)
-    {
-        this->_hasPostData = true;
-        this->postData = std::move(postData);
-    }
-
-    PostData const *HTTPRequest::getPostData() const
-    {
-        return this->postData.get();
-    }
-
-    bool HTTPRequest::hasPostData() const
-    {
-        return this->_hasPostData;
     }
 }

@@ -10,6 +10,7 @@ namespace vmc
     Router::Router(HTTPServer *server)
     {
         this->server = server;
+        this->sessionManager = std::shared_ptr<SessionManager>(new SessionManager());
     }
 
     void Router::start()
@@ -133,6 +134,7 @@ namespace vmc
             }
 
             auto postData = std::unique_ptr<PostData>(new PostData());
+            bool hasPostData = false;
 
             if (request.getMethod() == method::POST && request.getHeaders().exists("Content-Type"))
             {
@@ -161,6 +163,7 @@ namespace vmc
                         }
                     }
 
+                    hasPostData = true;
                     postData->setUrl(postUrlParams);
                 }
 
@@ -177,19 +180,21 @@ namespace vmc
                     std::string body(length, 0);
                     request.getStream().read(&body[0], length);
                     json jsonParams = json::parse(body);
+                    hasPostData = true;
                     postData->setJson(jsonParams);
                 }
-
-                request.setPostData(std::move(postData));
             }
 
             std::string pathString = urlParts[0];
             if (string::startsWith(pathString, "/")) pathString = pathString.substr(1, pathString.length() - 1);
 
             auto pathParts = string::split(pathString, "/");
+            RouterRequest routerRequest(&request, &pathParts, &urlParams, this->sessionManager);
+
+            if (hasPostData) routerRequest.setPostData(std::move(postData));
 
             std::cout << "Routing \"" << resourceUpper << "\" to \"" << route << "\"..." << std::endl;
-            callback(request, pathParts, urlParams);
+            callback(routerRequest);
             return;
         }
 
