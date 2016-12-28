@@ -2,7 +2,8 @@
 #define AUTHROUTES_H
 
 #include "vmc-libserver/Router.h"
-#include "vmc-libserver/Config.h"
+
+#include "Config.h"
 
 namespace vmc
 {
