@@ -31,7 +31,13 @@ namespace vmc
             routes::auth::route(*router, config);
 
             router->route({vmc::method::GET}, "/",
-                [](RouterRequest &request) { vmc::util::redirect(request.getRequest(), "/client/index.html"); });
+                [](RouterRequest &request) {
+                    if (request.getUrlParts().size() > 1 || request.getUrlParts()[0].length() > 0)
+                    {
+                        QUIT_MSG(request.getRequest(), 404, "File not found");
+                    }
+                    vmc::util::redirect(request.getRequest(), "/client/index.html");
+                });
 
             router->route({vmc::method::GET}, "/config",
                 [config](RouterRequest &request) {
