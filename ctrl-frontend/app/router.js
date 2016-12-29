@@ -12,28 +12,32 @@ var routes = [
     path: "/",
     component: Home,
     meta: {
-        authOnly: false
+        authOnly: false,
+        pageTitle: "Home"
     }
 },
 {
     path: "/login",
     component: Login,
     meta: {
-        authOnly: false
+        authOnly: false,
+        pageTitle: "Login"
     }
 },
 {
     path: "/register",
     component: Register,
     meta: {
-        authOnly: false
+        authOnly: false,
+        pageTitle: "Register"
     }
 },
 {
     path: "/dash",
     component: Dashboard,
     meta: {
-        authOnly: true
+        authOnly: true,
+        pageTitle: "Dashboard"
     }
 }
 ];
@@ -46,6 +50,9 @@ var router = new VueRouter({
 router.beforeEach(function(to, from, next) {
     store.commit("authClearMessage");
     store.dispatch("configRefresh");
+    if (to.meta.pageTitle) {
+        window.document.title = "VMC - " + to.meta.pageTitle;
+    }
     store.dispatch("authRefresh").then(function() {
         if (to.meta.authOnly && !store.state.auth.loggedIn) {
             store.commit("authSetMessage", {
