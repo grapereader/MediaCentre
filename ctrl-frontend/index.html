@@ -16,8 +16,11 @@
                     <nav class="navbar navbar-light bg-faded">
                         <router-link class="navbar-brand" to="/">VMC Control</router-link>
                         <ul class="nav navbar-nav">
-                            <li class="nav-item active">
-                            </li>
+                            <template v-if="isLoggedIn === true">
+                                <router-link class="nav-item" tag="li" to="/dash">
+                                    <a class="nav-link">Dashboard</a>
+                                </router-link>
+                            </template>
                         </ul>
                         <ul class="nav navbar-nav float-xs-right">
                             <template v-if="isLoggedIn === false">

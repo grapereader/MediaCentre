@@ -39,6 +39,7 @@ var routes = [
 ];
 
 var router = new VueRouter({
+    linkActiveClass: "active",
     routes: routes
 });
 
