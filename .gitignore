@@ -4,3 +4,4 @@
 *.a
 .ycm_extra_conf.py
 Makefile
+media-server
