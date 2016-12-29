@@ -6,9 +6,31 @@
 #include <cstdlib>
 #include <syslog.h>
 
-#include "Application.h"
+#include "vmc-libutils/Config.h"
+#include "vmc-libctrl/Application.h"
 
 #define VERSION "0.0.1"
+
+json defaultConfig = {
+    {"http", {
+        {"host", "0.0.0.0"},
+        {"port", 8080}}
+    },
+    {"database", {
+        {"host", "localhost"},
+        {"port", 3306},
+        {"user", "username"},
+        {"pass", "password"},
+        {"database", "vmc"}}
+    },
+    {"frontend", {
+        {"folder", "../"}}
+    },
+    {"app", {
+        {"registration", true},
+        {"guest", true}
+    }}
+};
 
 int main(int argc, char **argv)
 {
@@ -86,8 +108,8 @@ int main(int argc, char **argv)
     }
 
     syslog(LOG_NOTICE, "Starting the vmc application...");
-    vmc::Config conf(config);
-    vmc::start(&conf);
+    vmc::Config conf(config, defaultConfig);
+    vmc::ctrl::start(&conf);
 
     return 0;
 }

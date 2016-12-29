@@ -1,10 +1,9 @@
 #include "AuthRoutes.h"
 
-#include "vmc-libserver/Auth.h"
-#include "vmc-libserver/Database.h"
-#include "vmc-libserver/HTTPUtils.h"
-
-#include "vmc-libserver/String.h"
+#include <vmc-libhttp/Auth.h>
+#include <vmc-libhttp/Database.h>
+#include <vmc-libhttp/HTTPUtils.h>
+#include <vmc-libhttp/String.h>
 
 #include "AppUtils.h"
 

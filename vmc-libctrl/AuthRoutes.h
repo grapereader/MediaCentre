@@ -1,9 +1,8 @@
 #ifndef AUTHROUTES_H
 #define AUTHROUTES_H
 
-#include "vmc-libserver/Router.h"
-
-#include "Config.h"
+#include <vmc-libhttp/Router.h>
+#include <vmc-libutils/Config.h>
 
 namespace vmc
 {

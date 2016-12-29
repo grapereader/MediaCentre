@@ -10,7 +10,7 @@ namespace vmc
     class Config
     {
     public:
-        Config(char const *path);
+        Config(char const *path, json const &defaultConfig);
         json const &get() const;
 
     private:

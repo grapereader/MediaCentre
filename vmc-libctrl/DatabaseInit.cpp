@@ -1,6 +1,6 @@
 #include "DatabaseInit.h"
 
-#include "vmc-libserver/Database.h"
+#include <vmc-libhttp/Database.h>
 
 #include "tables/Users.h"
 

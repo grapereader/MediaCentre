@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import glob, os
 from subprocess import Popen
-vmcLibs = ["vmc-libserver"]
+vmcLibs = ["vmc-libctrl", "vmc-libstream", "vmc-libhttp", "vmc-libutils"]
 vmcLibsFiles = ""
 
 for lib in vmcLibs:
@@ -15,9 +15,9 @@ for f in glob.glob("*.cpp"):
     objects += f.replace(".cpp", ".o") + " ";
     sourceFiles.append(f);
 
-cflags = "-Wall -std=c++1y -I../../vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++"
+cflags = "-Wall -std=c++1y -I./vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++ -I./"
 ldflags = "-lboost_system -lboost_filesystem -lpthread -lmysqlpp -lmysqlclient -lcryptopp"
-exe = "ctrl-server"
+exe = "media-server"
 
 with open("Makefile", "w") as f:
     f.write("CFLAGS=" + cflags + "\n")
@@ -34,7 +34,7 @@ with open("Makefile", "w") as f:
         f.write("\t+$(MAKE) -C " + lib + "\n")
     f.write("\n")
     f.write(exe + ": $(OBJECTS)\n");
-    f.write("\t$(CXX) -o " + exe + " $(OBJECTS) " + vmcLibsFiles + "$(LDFLAGS)\n")
+    f.write("\t$(CXX) -o " + exe + " $(OBJECTS) " + vmcLibsFiles  + " $(LDFLAGS)\n")
     for source in sourceFiles:
         obj = source.replace(".cpp", ".o")
         f.write("\n")

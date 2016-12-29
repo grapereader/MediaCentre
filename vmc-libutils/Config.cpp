@@ -5,28 +5,7 @@
 
 namespace vmc
 {
-    json defaultConfig = {
-        {"http", {
-            {"host", "0.0.0.0"},
-            {"port", 8080}}
-        },
-        {"database", {
-            {"host", "localhost"},
-            {"port", 3306},
-            {"user", "username"},
-            {"pass", "password"},
-            {"database", "vmc"}}
-        },
-        {"frontend", {
-            {"folder", "../"}}
-        },
-        {"app", {
-            {"registration", true},
-            {"guest", true}
-        }}
-    };
-
-    Config::Config(char const *path)
+    Config::Config(char const *path, json const &defaultConfig)
     {
         std::ifstream cfile(path);
         if (cfile)
