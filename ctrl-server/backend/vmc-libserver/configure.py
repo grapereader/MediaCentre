@@ -8,7 +8,7 @@ for f in glob.glob("*.cpp"):
     objects += f.replace(".cpp", ".o") + " ";
     sourceFiles.append(f);
 
-cflags = "-Wall -std=c++1y -I../../vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++"
+cflags = "-Wall -std=c++1y -I../../../vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++"
 exe = "vmc-libserver.a"
 
 with open("Makefile", "w") as f:
