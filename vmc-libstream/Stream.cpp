@@ -12,29 +12,14 @@ namespace vmc
             this->path = path;
         }
 
-        void Stream::start()
+        void Stream::load()
         {
-            throw std::exception();
+
         }
 
-        void Stream::seek(int seconds)
+        void Stream::start(AudioBackend &backend)
         {
-            throw std::exception();
-        }
 
-        void Stream::stop()
-        {
-            throw std::exception();
-        }
-
-        int Stream::getLength()
-        {
-            throw std::exception();
-        }
-
-        bool Stream::isSeekable()
-        {
-            return this->seekable;
         }
     }
 }

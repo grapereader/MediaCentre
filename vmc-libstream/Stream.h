@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "AudioBackend.h"
+
 namespace vmc
 {
     namespace stream
@@ -15,24 +17,26 @@ namespace vmc
                 HTTP,
                 LOCAL_FILE
             };
+
+            enum LoadPolicy
+            {
+                SAVE_THEN_PLAY,
+                STREAM
+            };
         }
 
         class Stream
         {
         public:
             Stream(type::StreamType type, std::string const &path);
-            void start();
-            void seek(int seconds);
-            void stop();
 
-            int getLength();
-            bool isSeekable();
-
+            void load();
+            void start(AudioBackend &backend);
         private:
             type::StreamType type;
             std::string path;
 
-            bool seekable;
+            type::LoadPolicy loadPolicy = type::SAVE_THEN_PLAY;
         };
     }
 }
