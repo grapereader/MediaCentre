@@ -38,6 +38,12 @@ var routes = [
     meta: {
         authOnly: true,
         pageTitle: "Dashboard"
+    },
+    beforeEnter: function(to, from, next) {
+        if (store.state.auth.loggedIn) {
+            store.dispatch("inputRefresh");
+        }
+        next();
     }
 }
 ];

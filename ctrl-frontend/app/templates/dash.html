@@ -4,4 +4,19 @@
             <h3>Dashboard</h3>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Input Control</h4>
+                    <h6 class="card-subtitle text-muted">Control stereo input sources</h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    <template v-for="input in availableInputs">
+                        <a v-on:click="setInput(input.id)" href="javascript:void(0);" class="list-group-item list-group-item-action" v-bind:class="{ active: input.id == currentInput.id }">{{ input.name }}</a>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -6,6 +6,16 @@
 
 #include "RouteGroup.h"
 
+#define ACCESS_GUEST 1
+#define ACCESS_MEMBER 2
+#define ACCESS_ADMIN 3
+
+#define AUTHENTICATED(session) (session->exists("authenticated") && session->get<bool>("authenticated"))
+#define HAS_ACCESS(session, priv) (AUTHENTICATED(session) && session->get<int>("access-level") >= priv)
+#define ASSERT_ACCESS(request, session, priv) {\
+    if (!HAS_ACCESS(session, priv)) QUIT_MSG(request.getRequest(), 403, "Forbidden");\
+}
+
 namespace vmc
 {
     namespace routes

@@ -13,7 +13,7 @@ namespace vmc
             Input(std::string const &name, int gpioPin);
 
             //TODO Not implemented
-            void setEnabled(bool enabled) = delete;
+            void setEnabled(bool enabled);
 
             std::string const &getName() const;
             int getGpioPin() const;

@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include <iostream>
+
 namespace vmc
 {
     namespace input
@@ -8,6 +10,11 @@ namespace vmc
         {
             this->name = name;
             this->gpioPin = gpioPin;
+        }
+
+        void Input::setEnabled(bool enabled)
+        {
+            std::cout << "TODO: Input " << this->name << " setEnabled called (" << enabled << ")" << std::endl;
         }
 
         std::string const &Input::getName() const

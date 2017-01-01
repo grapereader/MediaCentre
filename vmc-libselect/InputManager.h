@@ -14,6 +14,8 @@ namespace vmc
         public:
             InputManager();
 
+            void setCurrentInput(size_t id);
+            size_t getCurrentInput() const;
             std::vector<Input> const &getInputs() const;
         private:
             //TODO Runtime configurable
@@ -22,6 +24,8 @@ namespace vmc
                 Input("TV Out", 0),
                 Input("Aux", 0)
             };
+
+            size_t currentInput;
         };
     }
 }

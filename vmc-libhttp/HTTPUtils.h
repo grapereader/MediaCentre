@@ -25,6 +25,11 @@
     QUIT_MSG(request, 400, "{ \"okay\": false, \"error\": \"Bad request\" }");\
 }
 
+#define ASSERT_JSON_KEY(request, key) {\
+    if (!request.getPostData().hasJsonData()) QUIT_BAD_REQUEST(request.getRequest());\
+    if (request.getPostData().getJson().count(key) == 0) QUIT_BAD_REQUEST(request.getRequest());\
+}
+
 namespace vmc
 {
     namespace util

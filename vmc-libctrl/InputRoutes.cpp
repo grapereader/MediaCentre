@@ -1,5 +1,7 @@
 #include "InputRoutes.h"
 
+#include "AuthRoutes.h"
+
 #include <vmc-libselect/InputSelection.h>
 #include <vmc-libhttp/HTTPUtils.h>
 
@@ -19,6 +21,8 @@ namespace vmc
 
         void InputRoutes::getInputs(RouterRequest &request)
         {
+            auto session = request.initSession();
+            ASSERT_ACCESS(request, session, ACCESS_GUEST);
             json responseJson = {};
             responseJson["okay"] = true;
 
@@ -37,13 +41,24 @@ namespace vmc
             }
 
             responseJson["inputs"] = inputArr;
+            responseJson["currentInput"] = inputManager->getCurrentInput();
 
             util::sendJSON(request.getRequest(), responseJson);
         }
 
         void InputRoutes::setInput(RouterRequest &request)
         {
+            auto session = request.initSession();
+            ASSERT_ACCESS(request, session, ACCESS_MEMBER);
+            ASSERT_JSON_KEY(request, "id");
+            size_t id = request.getPostData().getJson()["id"];
 
+            input::getInputManager()->setCurrentInput(id);
+
+            json responseJson = {{"okay", true}};
+            responseJson["currentInput"] = id;
+
+            util::sendJSON(request.getRequest(), responseJson);
         }
     }
 }

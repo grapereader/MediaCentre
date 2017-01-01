@@ -62,7 +62,7 @@ namespace vmc
                     displayName = requestJson["displayName"];
                 }
                 session->put("authenticated", true);
-                session->put("access-level", 1);
+                session->put("access-level", ACCESS_GUEST);
                 session->put("username", displayName);
                 response["okay"] = true;
                 response["user"] = {{"username", displayName}, {"privilege", 1}};
@@ -167,8 +167,6 @@ namespace vmc
 
             auto db = database::getDatabase();
             auto result = db->store("SELECT COUNT(*) AS count FROM users WHERE username = %0q OR email = %1q", { username, email });
-
-            if (result.num_rows() > 0 && (int) result[0]["count"] > 0)
             {
                 json errJson = {
                     {"okay", false},
@@ -180,7 +178,7 @@ namespace vmc
 
             std::string passHash = vmc::auth::createHash(password);
 
-            db->execute("INSERT INTO users (username, password, email, privilege) VALUES (%0q, %1q, %2q, %3q)", { username, passHash, email, 2 });
+            db->execute("INSERT INTO users (username, password, email, privilege) VALUES (%0q, %1q, %2q, %3q)", { username, passHash, email, ACCESS_MEMBER });
 
             json respJson = {
                 {"okay", true},
