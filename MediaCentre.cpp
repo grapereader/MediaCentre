@@ -8,6 +8,7 @@
 
 #include "vmc-libutils/Config.h"
 #include "vmc-libctrl/Application.h"
+#include "vmc-libselect/InputSelection.h"
 
 #define VERSION "0.0.1"
 
@@ -109,6 +110,7 @@ int main(int argc, char **argv)
 
     syslog(LOG_NOTICE, "Starting the vmc application...");
     vmc::Config conf(config, defaultConfig);
+    vmc::input::initializeInputManager();
     vmc::ctrl::start(&conf);
 
     return 0;

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import glob, os
 from subprocess import Popen
-vmcLibs = ["vmc-libctrl", "vmc-libstream", "vmc-libhttp", "vmc-libutils"]
+vmcLibs = ["vmc-libctrl", "vmc-libstream", "vmc-libhttp", "vmc-libselect", "vmc-libutils"]
 vmcLibsFiles = ""
 
 for lib in vmcLibs:

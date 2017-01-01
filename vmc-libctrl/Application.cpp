@@ -7,6 +7,7 @@
 #include <vmc-libhttp/String.h>
 
 #include "AuthRoutes.h"
+#include "InputRoutes.h"
 #include "DatabaseInit.h"
 
 namespace vmc
@@ -29,7 +30,8 @@ namespace vmc
             router->routeStaticFolder("/client", frontendFolder);
 
             std::vector<RouteGroup*> routes = {
-                new routes::AuthRoutes(config)
+                new routes::AuthRoutes(config),
+                new routes::InputRoutes(config)
             };
 
             for (auto it = routes.begin(); it != routes.end(); it++)
