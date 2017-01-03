@@ -14,29 +14,32 @@
             <div class="row">
                 <div class="col-md-12">
                     <nav class="navbar navbar-light bg-faded">
-                        <router-link class="navbar-brand" to="/">VMC Control</router-link>
-                        <ul class="nav navbar-nav">
-                            <template v-if="isLoggedIn === true">
-                                <router-link class="nav-item" tag="li" to="/dash">
-                                    <a class="nav-link">Dashboard</a>
-                                </router-link>
-                            </template>
-                        </ul>
-                        <ul class="nav navbar-nav float-xs-right">
-                            <template v-if="isLoggedIn === false">
-                                <li class="nav-item">
-                                    <router-link class="nav-link" to="/login">Login</router-link>
-                                </li>
-                            </template>
-                            <template v-else>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="javascript:void();" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ userData.username }}</a>
-                                    <div class="dropdown-menu">
-                                        <a v-on:click="logout()" class="dropdown-item" href="javascript:void();">Logout</a>
-                                    </div>
-                                </li>
-                            </template>
-                        </ul>
+                        <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#navCollapse"></button>
+                        <div class="collapse navbar-toggleable-md" id="navCollapse">
+                            <router-link class="navbar-brand" to="/">VMC Control</router-link>
+                            <ul class="nav navbar-nav">
+                                <template v-if="isLoggedIn === true">
+                                    <router-link class="nav-item" tag="li" to="/dash">
+                                        <a class="nav-link">Dashboard</a>
+                                    </router-link>
+                                </template>
+                            </ul>
+                            <ul class="nav navbar-nav float-lg-right">
+                                <template v-if="isLoggedIn === false">
+                                    <li class="nav-item">
+                                        <router-link class="nav-link" to="/login">Login</router-link>
+                                    </li>
+                                </template>
+                                <template v-else>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="javascript:void();" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ userData.username }}</a>
+                                        <div class="dropdown-menu">
+                                            <a v-on:click="logout()" class="dropdown-item" href="javascript:void();">Logout</a>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
                     </nav>
                 </div>
             </div>
