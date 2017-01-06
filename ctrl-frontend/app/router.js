@@ -4,6 +4,7 @@ var Home = require("./components/home.js").Home;
 var Login = require("./components/login.js").Login;
 var Dashboard = require("./components/dash.js").Dashboard;
 var Register = require("./components/register.js").Register;
+var PlayQueue = require("./components/playing.js").PlayQueue;
 
 var store = require("./store.js").store;
 
@@ -44,6 +45,14 @@ var routes = [
             store.dispatch("inputRefresh");
         }
         next();
+    }
+},
+{
+    path: "/playing",
+    component: PlayQueue,
+    meta: {
+        authOnly: true,
+        pageTitle: "Play Queue"
     }
 }
 ];

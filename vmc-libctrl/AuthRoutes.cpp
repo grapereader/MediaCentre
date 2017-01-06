@@ -126,7 +126,6 @@ namespace vmc
 
         bool validateEmail(std::string email)
         {
-            std::cout << email << std::endl;
             if (!string::contains(email, "@")) return false;
             auto emailParts = string::split(email, "@");
 
@@ -167,6 +166,7 @@ namespace vmc
 
             auto db = database::getDatabase();
             auto result = db->store("SELECT COUNT(*) AS count FROM users WHERE username = %0q OR email = %1q", { username, email });
+            if ((int) result[0]["count"] > 0)
             {
                 json errJson = {
                     {"okay", false},
