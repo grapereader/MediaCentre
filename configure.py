@@ -15,8 +15,8 @@ for f in glob.glob("*.cpp"):
     objects += f.replace(".cpp", ".o") + " ";
     sourceFiles.append(f);
 
-cflags = "-Wall -std=c++1y -I./vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++ -I./ `pkg-config gio-2.0 --cflags`"
-ldflags = "-lboost_system -lboost_filesystem -lpthread -lmysqlpp -lmysqlclient -lcryptopp `pkg-config gio-2.0 --libs`"
+cflags = "-Wall -std=c++1y -I./vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++ -I./ `pkg-config glibmm-2.4 --cflags`"
+ldflags = "-lboost_system -lboost_filesystem -lpthread -lmysqlpp -lmysqlclient -lcryptopp `pkg-config glibmm-2.4 --libs`"
 exe = "media-server"
 
 with open("Makefile", "w") as f:
