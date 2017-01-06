@@ -9,6 +9,7 @@ Required Libraries:
   * System
   * Filesystem
   * ASIO
+* glib 2.0 (for GIO)
 
 Run configure.py to generate Makefiles for all subprojects.
 Then, 'make all' in the root directory.
