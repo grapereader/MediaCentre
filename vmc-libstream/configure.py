@@ -12,7 +12,7 @@ for f in glob.glob("*.cpp"):
     objects += f.replace(".cpp", ".o") + " "
     sourceFiles.append(f)
 
-cflags = "-Wall -std=c++1y `pkg-config glibmm-2.4 --cflags`"
+cflags = "-Wall -std=c++1y `pkg-config giomm-2.4 --cflags`"
 exe = dirname + ".a"
 
 for i in includeModules:
