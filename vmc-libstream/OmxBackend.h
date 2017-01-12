@@ -1,5 +1,7 @@
 #include "AudioBackend.h"
 
+#include <giomm.h>
+
 namespace vmc
 {
     namespace stream
@@ -7,6 +9,8 @@ namespace vmc
         class OmxBackend : AudioBackend
         {
         public:
+            OmxBackend();
+
             void play(std::string const &file) override;
             void play(InStreamPtr inputStream) override;
 
@@ -24,6 +28,10 @@ namespace vmc
             void backward(int seconds) override;
 
             int getLength() const override;
+        private:
+            Glib::RefPtr<Gio::DBus::Connection> connection;
+            Glib::RefPtr<Gio::DBus::Proxy> proxy;
+            Glib::RefPtr<Gio::DBus::Proxy> playerProxy;
         };
     }
 }
