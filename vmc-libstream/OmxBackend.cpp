@@ -1,6 +1,7 @@
 #include "OmxBackend.h"
 
 #include <cstdlib>
+#include <iostream>
 
 namespace vmc
 {
@@ -8,20 +9,39 @@ namespace vmc
     {
         OmxBackend::OmxBackend()
         {
-            this->connection = Gio::DBus::Connection::get_sync(Gio::DBus::BUS_TYPE_SESSION);
-            this->proxy = Gio::DBus::Proxy::create_sync(this->connection, "org.mpris.MediaPlayer2",
-                "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2", Gio::Cancellable::create());
-            this->playerProxy = Gio::DBus::Proxy::create_sync(this->connection, "org.mpris.MediaPlayer2.Player",
-                "/org/mpris/MediaPlayer2/Player", "org.mpris.MediaPlayer2.Player", Gio::Cancellable::create());
+            Glib::init();
+
+            const char *address = std::getenv("DBUS_SESSION_BUS_ADDRESS");
+            if (!address)
+            {
+                std::cout << "Dbus session address not defined" << std::endl;
+                throw;
+            }
+            std::cout << "OmxBackend: Connecting to dbus at " << address << std::endl;
+
+            this->proxy = Gio::DBus::Proxy::create_for_bus_sync(Gio::DBus::BUS_TYPE_SESSION, "org.mpris.MediaPlayer2.omxplayer",
+                "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2");
+            std::cout << "OmxBackend: Connected to mediaplayer proxy" << std::endl;
+
+            this->playerProxy = Gio::DBus::Proxy::create_for_bus_sync(Gio::DBus::BUS_TYPE_SESSION, "org.mpris.MediaPlayer2.omxplayer",
+                "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player");
+
+            std::cout << "OmxBackend: Initialization done." << std::endl;
         }
 
         void OmxBackend::play(std::string const &file)
         {
-            std::system(std::string("omxplayer -o local ").append(file).c_str());
+            std::system(std::string("omxplayer -o local ").append(file).append(" &").c_str());
+            std::cout << "OmxBackend: Playback started." << std::endl;
         }
 
         void OmxBackend::play(InStreamPtr stream)
         {
+        }
+
+        void OmxBackend::resume()
+        {
+            this->playerProxy->call_sync("Play");
         }
 
         void OmxBackend::pause()
@@ -31,7 +51,14 @@ namespace vmc
 
         void OmxBackend::stop()
         {
-            this->playerProxy->call_sync("Stop");
+            try
+            {
+                this->proxy->call_sync("Quit");
+            }
+            catch (Glib::Error error)
+            {
+                std::cout << error.what() << std::endl;
+            }
         }
 
         void OmxBackend::setVolume(float percent)
@@ -43,7 +70,8 @@ namespace vmc
         float OmxBackend::getVolume() const
         {
             auto response = this->playerProxy->call_sync("Volume");
-            return Glib::VariantBase::cast_dynamic<double>(response.get_child());
+            auto retVal = Glib::VariantBase::cast_dynamic<Glib::Variant<double>>(response.get_child());
+            return retVal.get();
         }
 
         bool OmxBackend::isSeekable() const

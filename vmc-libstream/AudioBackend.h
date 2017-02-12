@@ -17,6 +17,7 @@ namespace vmc
             virtual void play(std::string const &file) = 0;
             virtual void play(InStreamPtr inputStream) = 0;
 
+            virtual void resume() = 0;
             virtual void pause() = 0;
             virtual void stop() = 0;
 

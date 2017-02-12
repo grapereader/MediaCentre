@@ -12,7 +12,7 @@ for f in glob.glob("*.cpp"):
     objects += f.replace(".cpp", ".o") + " "
     sourceFiles.append(f)
 
-cflags = "-Wall -std=c++1y -I../vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++"
+cflags = "-Wall -std=c++1y -I../vendor/json/include -I/usr/include/mysql -I/usr/include/mysql++ `pkg-config giomm-2.4 --cflags`"
 exe = dirname + ".a"
 
 for i in includeModules:

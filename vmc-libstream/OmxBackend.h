@@ -6,7 +6,7 @@ namespace vmc
 {
     namespace stream
     {
-        class OmxBackend : AudioBackend
+        class OmxBackend : public AudioBackend
         {
         public:
             OmxBackend();
@@ -14,6 +14,7 @@ namespace vmc
             void play(std::string const &file) override;
             void play(InStreamPtr inputStream) override;
 
+            void resume() override;
             void pause() override;
             void stop() override;
 

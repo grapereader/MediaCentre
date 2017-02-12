@@ -6,8 +6,11 @@
 #include <vmc-libhttp/Router.h>
 #include <vmc-libhttp/String.h>
 
+#include <vmc-libstream/OmxBackend.h>
+
 #include "AuthRoutes.h"
 #include "InputRoutes.h"
+#include "PlayRoutes.h"
 #include "DatabaseInit.h"
 
 namespace vmc
@@ -31,7 +34,8 @@ namespace vmc
 
             std::vector<RouteGroup*> routes = {
                 new routes::AuthRoutes(config),
-                new routes::InputRoutes(config)
+                new routes::InputRoutes(config),
+                new routes::PlayRoutes(config, std::unique_ptr<stream::AudioBackend>(new stream::OmxBackend()))
             };
 
             for (auto it = routes.begin(); it != routes.end(); it++)
