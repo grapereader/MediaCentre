@@ -17,7 +17,7 @@ namespace vmc
 {
     namespace ctrl
     {
-        void start(Config const *config)
+        void start(Config const *config, input::InputManager *inputManager, stream::PlaylistManager *playlistManager)
         {
             auto dbConf = config->get().at("database");
             database::initDatabase(dbConf.at("host"), dbConf.at("port"), dbConf.at("user"), dbConf.at("pass"),
@@ -34,8 +34,8 @@ namespace vmc
 
             std::vector<RouteGroup*> routes = {
                 new routes::AuthRoutes(config),
-                new routes::InputRoutes(config),
-                new routes::PlayRoutes(config, std::unique_ptr<stream::AudioBackend>(new stream::OmxBackend()))
+                new routes::InputRoutes(config, inputManager),
+                new routes::PlayRoutes(config, playlistManager)
             };
 
             for (auto it = routes.begin(); it != routes.end(); it++)

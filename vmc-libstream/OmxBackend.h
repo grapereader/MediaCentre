@@ -29,10 +29,13 @@ namespace vmc
             void backward(int seconds) override;
 
             int getLength() const override;
+
         private:
             Glib::RefPtr<Gio::DBus::Connection> connection;
             Glib::RefPtr<Gio::DBus::Proxy> proxy;
             Glib::RefPtr<Gio::DBus::Proxy> playerProxy;
+
+            bool running;
         };
     }
 }

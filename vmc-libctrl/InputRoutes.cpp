@@ -2,7 +2,6 @@
 
 #include "AuthRoutes.h"
 
-#include <vmc-libselect/InputSelection.h>
 #include <vmc-libhttp/HTTPUtils.h>
 
 #define PL1 std::placeholders::_1
@@ -13,6 +12,11 @@ namespace vmc
 {
     namespace routes
     {
+        InputRoutes::InputRoutes(Config const *config, input::InputManager *inputManager) : RouteGroup(config)
+        {
+            this->inputManager = inputManager;
+        }
+
         void InputRoutes::initRoutes(Router &router)
         {
             router.route({method::GET}, "/getInputs", std::bind(&InputRoutes::getInputs, this, PL1));
@@ -28,8 +32,7 @@ namespace vmc
 
             json inputArr = json::array();
 
-            auto inputManager = input::getInputManager();
-            auto inputs = &inputManager->getInputs();
+            auto inputs = &this->inputManager->getInputs();
 
             for (size_t i = 0; i < inputs->size(); i++)
             {
@@ -41,7 +44,7 @@ namespace vmc
             }
 
             responseJson["inputs"] = inputArr;
-            responseJson["currentInput"] = inputManager->getCurrentInput();
+            responseJson["currentInput"] = this->inputManager->getCurrentInput();
 
             util::sendJSON(request.getRequest(), responseJson);
         }
@@ -53,7 +56,7 @@ namespace vmc
             ASSERT_JSON_KEY(request, "id");
             size_t id = request.getPostData().getJson()["id"];
 
-            input::getInputManager()->setCurrentInput(id);
+            this->inputManager->setCurrentInput(id);
 
             json responseJson = {{"okay", true}};
             responseJson["currentInput"] = id;

@@ -2,7 +2,7 @@
 #define PLAYROUTES_H
 
 #include <vmc-libhttp/Router.h>
-#include <vmc-libstream/AudioBackend.h>
+#include <vmc-libstream/PlaylistManager.h>
 #include "RouteGroup.h"
 
 namespace vmc
@@ -12,13 +12,14 @@ namespace vmc
         class PlayRoutes : public RouteGroup
         {
         public:
-            PlayRoutes(Config const *config, std::unique_ptr<stream::AudioBackend> backend);
+            PlayRoutes(Config const *config, stream::PlaylistManager *playlistManager);
             void initRoutes(Router &router);
         private:
-            void test1(RouterRequest &request);
-            void test2(RouterRequest &request);
+            void addMediaUrl(RouterRequest &request);
+            void addMediaUpload(RouterRequest &request);
+            void getPlayerState(RouterRequest &request);
 
-            std::unique_ptr<stream::AudioBackend> backend;
+            stream::PlaylistManager *playlistManager;
         };
     }
 }

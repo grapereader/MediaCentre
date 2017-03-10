@@ -2,8 +2,10 @@
 #define STREAM_H
 
 #include <string>
+#include <memory>
 
 #include "AudioBackend.h"
+#include "PlaylistEntry.h"
 
 namespace vmc
 {
@@ -17,26 +19,19 @@ namespace vmc
                 HTTP,
                 LOCAL_FILE
             };
-
-            enum LoadPolicy
-            {
-                SAVE_THEN_PLAY,
-                STREAM
-            };
         }
 
         class Stream
         {
         public:
-            Stream(type::StreamType type, std::string const &path);
+            Stream(std::string const &path);
+            Stream(std::string const &path, type::StreamType type);
 
-            void load();
-            void start(AudioBackend &backend);
+            std::shared_ptr<PlaylistEntry> getEntry() const;
         private:
+            std::string getUrl() const;
             type::StreamType type;
             std::string path;
-
-            type::LoadPolicy loadPolicy = type::SAVE_THEN_PLAY;
         };
     }
 }
