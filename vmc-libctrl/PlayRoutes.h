@@ -19,6 +19,14 @@ namespace vmc
             void addMediaUpload(RouterRequest &request);
             void getPlayerState(RouterRequest &request);
 
+            void clearPlaylist(RouterRequest &request);
+
+            void next(RouterRequest &request);
+            void back(RouterRequest &request);
+
+            void pause(RouterRequest &request);
+            void play(RouterRequest &request);
+
             stream::PlaylistManager *playlistManager;
         };
     }

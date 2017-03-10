@@ -8,11 +8,26 @@ var PlayQueue = {
         };
     },
     methods: {
-        test1: function() {
-            axios.post("/test1");
+        addUrl: function(event) {
+            var self = this;
+            this.$store.dispatch("playerAddUrl", this.url).then(function() {
+                self.url = "";
+            });
         },
-        test2: function() {
-            axios.post("/test2");
+        clearPlaylist: function(event) {
+            this.$store.dispatch("playerClearAll");
+        },
+        nextTrack: function(event) {
+            this.$store.dispatch("playerNext");
+        },
+        prevTrack: function(event) {
+            this.$store.dispatch("playerBack");
+        },
+        pause: function(event) {
+            this.$store.dispatch("playerPause");
+        },
+        play: function(event) {
+            this.$store.dispatch("playerPlay");
         }
     },
     computed: {

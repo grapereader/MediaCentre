@@ -1,6 +1,7 @@
 #include "OmxPlaylistManager.h"
 
 #include <string>
+#include <iostream>
 
 namespace vmc
 {
@@ -8,12 +9,14 @@ namespace vmc
     {
         void OmxPlaylistManager::addEntry(PlaylistEntry const &entry)
         {
-            std::system(std::string("omxd A ").append(entry.getUrl()).c_str());
+            if (entry.getUrl().length() <= 1) return;
+            std::system(std::string("omxd A '").append(entry.getUrl()).append("'").c_str());
         }
 
         void OmxPlaylistManager::addEntryUpNext(PlaylistEntry const &entry)
         {
-            std::system(std::string("omxd a ").append(entry.getUrl()).c_str());
+            if (entry.getUrl().length() <= 1) return;
+            std::system(std::string("omxd a '").append(entry.getUrl()).append("'").c_str());
         }
 
         void OmxPlaylistManager::removeEntry(int index)

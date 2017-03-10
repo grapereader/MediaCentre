@@ -18,9 +18,14 @@ namespace vmc
 
         void PlayRoutes::initRoutes(Router &router)
         {
-            router.route({vmc::method::POST}, "/addMediaUrl", std::bind(&PlayRoutes::addMediaUrl, this, PL1));
-            router.route({vmc::method::POST}, "/addMediaUpload", std::bind(&PlayRoutes::addMediaUpload, this, PL1));
-            router.route({vmc::method::GET}, "/playerState", std::bind(&PlayRoutes::getPlayerState, this, PL1));
+            router.route({vmc::method::POST}, "/player/addUrl", std::bind(&PlayRoutes::addMediaUrl, this, PL1));
+            router.route({vmc::method::POST}, "/player/addUpload", std::bind(&PlayRoutes::addMediaUpload, this, PL1));
+            router.route({vmc::method::GET},  "/player/state", std::bind(&PlayRoutes::getPlayerState, this, PL1));
+            router.route({vmc::method::POST}, "/player/clear", std::bind(&PlayRoutes::clearPlaylist, this, PL1));
+            router.route({vmc::method::POST}, "/player/next", std::bind(&PlayRoutes::next, this, PL1));
+            router.route({vmc::method::POST}, "/player/back", std::bind(&PlayRoutes::back, this, PL1));
+            router.route({vmc::method::POST}, "/player/pause", std::bind(&PlayRoutes::pause, this, PL1));
+            router.route({vmc::method::POST}, "/player/play", std::bind(&PlayRoutes::play, this, PL1));
         }
 
         void PlayRoutes::addMediaUrl(RouterRequest &request)
@@ -73,5 +78,71 @@ namespace vmc
 
             util::sendJSON(request.getRequest(), responseJson);
         }
+
+        void PlayRoutes::clearPlaylist(RouterRequest &request)
+        {
+            auto session = request.initSession();
+            ASSERT_ACCESS(request, session, ACCESS_MEMBER);
+
+            json responseJson = {};
+
+            this->playlistManager->clearAll();
+
+            responseJson["okay"] = true;
+            util::sendJSON(request.getRequest(), responseJson);
+        }
+
+        void PlayRoutes::next(RouterRequest &request)
+        {
+            auto session = request.initSession();
+            ASSERT_ACCESS(request, session, ACCESS_GUEST);
+
+            json responseJson = {};
+
+            this->playlistManager->next();
+
+            responseJson["okay"] = true;
+            util::sendJSON(request.getRequest(), responseJson);
+        }
+
+        void PlayRoutes::back(RouterRequest &request)
+        {
+            auto session = request.initSession();
+            ASSERT_ACCESS(request, session, ACCESS_GUEST);
+
+            json responseJson = {};
+
+            this->playlistManager->prev();
+
+            responseJson["okay"] = true;
+            util::sendJSON(request.getRequest(), responseJson);
+        }
+
+        void PlayRoutes::pause(RouterRequest &request)
+        {
+            auto session = request.initSession();
+            ASSERT_ACCESS(request, session, ACCESS_GUEST);
+
+            json responseJson = {};
+
+            this->playlistManager->getBackend().pause();
+
+            responseJson["okay"] = true;
+            util::sendJSON(request.getRequest(), responseJson);
+        }
+
+        void PlayRoutes::play(RouterRequest &request)
+        {
+            auto session = request.initSession();
+            ASSERT_ACCESS(request, session, ACCESS_GUEST);
+
+            json responseJson = {};
+
+            this->playlistManager->getBackend().resume();
+
+            responseJson["okay"] = true;
+            util::sendJSON(request.getRequest(), responseJson);
+        }
+
     }
 }
