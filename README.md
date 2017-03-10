@@ -19,4 +19,5 @@ Enter ctrl-frontend directory, run 'npm install' and 'npm run-script build'
 
 ###License
 
-None. All rights reserved (dy default). For now. Will add a license as this gets closer to being functional.
+Licensed under GPL v3
+
