@@ -6,7 +6,11 @@
     </div>
     <div class="row">
         <div class="col-lg-8">
-            <h4>Coming up...</h4>
+            <div class="list-group">
+                <template v-for="entry in playlist">
+                    <a v-on:click="setTrack(entry.id)" href="javascript:void(0);" class="list-group-item list-group-item-action" v-bind:class="{ active: entry.id == currentId }">{{ entry.title }}</a>
+                </template>
+            </div>
         </div>
         <div class="col-lg-4">
             <div class="row">

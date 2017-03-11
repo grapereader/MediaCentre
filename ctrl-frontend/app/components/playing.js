@@ -23,14 +23,23 @@ var PlayQueue = {
         prevTrack: function(event) {
             this.$store.dispatch("playerBack");
         },
+        setTrack: function(id) {
+        },
         pause: function(event) {
-            this.$store.dispatch("playerPause");
+            this.$store.dispatch("playerSetState", "paused");
         },
         play: function(event) {
-            this.$store.dispatch("playerPlay");
+            this.$store.dispatch("playerSetState", "playing");
         }
     },
     computed: {
+        currentId: function() {
+            if (this.$store.state.player.currentTrack == undefined) return 0;
+            return this.$store.state.player.currentTrack.id;
+        },
+        playlist: function() {
+            return this.$store.state.player.playlist;
+        }
     }
 }
 

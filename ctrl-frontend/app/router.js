@@ -53,6 +53,11 @@ var routes = [
     meta: {
         authOnly: true,
         pageTitle: "Play Queue"
+    },
+    beforeEnter: function(to, from, next) {
+        store.dispatch("playerRefresh");
+        store.dispatch("playerRefreshPlaylist");
+        next();
     }
 }
 ];

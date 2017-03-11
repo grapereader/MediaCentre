@@ -8,10 +8,11 @@ namespace vmc
         {
             this->backend = std::move(backend);
         }
-
+        /*
         AudioBackend &PlaylistManager::getBackend()
         {
             return *this->backend.get();
         }
+        */
     }
 }

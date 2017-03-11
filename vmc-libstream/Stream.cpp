@@ -31,21 +31,24 @@ namespace vmc
 
         std::shared_ptr<PlaylistEntry> Stream::getEntry() const
         {
-            return std::shared_ptr<PlaylistEntry>(new PlaylistEntry(this->getUrl()));
-        }
-
-        std::string Stream::getUrl() const {
+            std::string url = this->path;
+            std::string title = this->path;
             if (this->type == type::YOUTUBE) {
-                std::string cmd = "youtube-dl -g \"";
+                std::string cmd = "youtube-dl -e -g \"";
                 cmd.append(this->path).append("\"");
                 std::string urlString = utils::callProcess(cmd.c_str());
 
                 auto parts = string::split(urlString, "\n");
-                if (parts.size() == 0) throw std::runtime_error("Unable to retrieve video url");
+                if (parts.size() < 2) throw std::runtime_error("Unable to retrieve video url");
 
-                return parts[0];
+                title = parts[0];
+                url = parts[1];
             }
-            return this->path;
+            return std::shared_ptr<PlaylistEntry>(new PlaylistEntry(url, title));
+        }
+
+        std::string Stream::getUrl() const {
+            throw;
         }
 
     }

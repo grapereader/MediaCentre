@@ -24,8 +24,9 @@ namespace vmc
             router.route({vmc::method::POST}, "/player/clear", std::bind(&PlayRoutes::clearPlaylist, this, PL1));
             router.route({vmc::method::POST}, "/player/next", std::bind(&PlayRoutes::next, this, PL1));
             router.route({vmc::method::POST}, "/player/back", std::bind(&PlayRoutes::back, this, PL1));
-            router.route({vmc::method::POST}, "/player/pause", std::bind(&PlayRoutes::pause, this, PL1));
-            router.route({vmc::method::POST}, "/player/play", std::bind(&PlayRoutes::play, this, PL1));
+            router.route({vmc::method::POST}, "/player/setPlayState", std::bind(&PlayRoutes::setPlayState, this, PL1));
+            router.route({vmc::method::POST}, "/player/setPosition", std::bind(&PlayRoutes::setPosition, this, PL1));
+            router.route({vmc::method::GET}, "/player/getPlaylist", std::bind(&PlayRoutes::getPlaylist, this, PL1));
         }
 
         void PlayRoutes::addMediaUrl(RouterRequest &request)
@@ -69,13 +70,42 @@ namespace vmc
 
             json responseJson = {};
 
-            auto *backend = &this->playlistManager->getBackend();
+            std::string playString = "stopped";
+            auto state = this->playlistManager->getPlayState();
+            if (state == stream::state::PLAYING) playString = "playing";
+            else if (state == stream::state::PAUSED) playString = "paused";
 
-            responseJson["seekable"] = backend->isSeekable();
-            responseJson["controllable"] = backend->isControllable();
-            responseJson["length"] = backend->getLength();
-            responseJson["volume"] = backend->getVolume();
+            responseJson["state"] = playString;
 
+            auto position = this->playlistManager->getPositionInfo();
+            responseJson["position"] = position.position;
+            responseJson["length"] = position.length;
+
+            util::sendJSON(request.getRequest(), responseJson);
+        }
+
+        void PlayRoutes::getPlaylist(RouterRequest &request)
+        {
+            auto session = request.initSession();
+            ASSERT_ACCESS(request, session, ACCESS_GUEST);
+
+            json responseJson = {};
+
+            auto playlist = this->playlistManager->getPlaylist();
+            responseJson["playing"] = playlist.nowPlaying;
+
+            auto entries = playlist.entries;
+            json entryList = json::array();
+            for (auto it = entries.begin(); it != entries.end(); it++)
+            {
+                json entry = {};
+                entry["title"] = it->getTitle();
+                entry["id"] = it->getId();
+                entryList.push_back(entry);
+            }
+
+            responseJson["okay"] = true;
+            responseJson["playlist"] = entryList;
             util::sendJSON(request.getRequest(), responseJson);
         }
 
@@ -118,29 +148,43 @@ namespace vmc
             util::sendJSON(request.getRequest(), responseJson);
         }
 
-        void PlayRoutes::pause(RouterRequest &request)
+        void PlayRoutes::setPlayState(RouterRequest &request)
         {
             auto session = request.initSession();
             ASSERT_ACCESS(request, session, ACCESS_GUEST);
+            ASSERT_JSON_KEY(request, "state");
 
             json responseJson = {};
 
-            this->playlistManager->getBackend().pause();
+            std::string state = request.getPostData().getJson()["state"];
+            auto playState = stream::state::STOPPED;
+            if (string::contains(state, "playing")) playState = stream::state::PLAYING;
+            else if (string::contains(state, "paused")) playState = stream::state::PAUSED;
+            this->playlistManager->setPlayState(playState);
+
+            playState = this->playlistManager->getPlayState();
 
             responseJson["okay"] = true;
+            responseJson["state"] = playState == stream::state::PLAYING ? "playing" :
+                playState == stream::state::PAUSED ? "paused" : "stopped";
             util::sendJSON(request.getRequest(), responseJson);
         }
 
-        void PlayRoutes::play(RouterRequest &request)
+        void PlayRoutes::setPosition(RouterRequest &request)
         {
             auto session = request.initSession();
             ASSERT_ACCESS(request, session, ACCESS_GUEST);
+            ASSERT_JSON_KEY(request, "position");
 
             json responseJson = {};
 
-            this->playlistManager->getBackend().resume();
+            int position = request.getPostData().getJson()["position"];
+            this->playlistManager->setPosition(position);
 
+            auto posData = this->playlistManager->getPositionInfo();
             responseJson["okay"] = true;
+            responseJson["position"] = posData.position;
+
             util::sendJSON(request.getRequest(), responseJson);
         }
 

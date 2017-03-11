@@ -8,6 +8,12 @@ namespace vmc
 {
     namespace stream
     {
+        typedef struct OmxEntryWrapper
+        {
+            PlaylistEntry entry;
+            long initTime;
+        } OmxEntryWrapper;
+
         class OmxPlaylistManager : public PlaylistManager
         {
         public:
@@ -20,7 +26,14 @@ namespace vmc
             void next() override;
             void prev() override;
             void playAtIndex(int index) override;
-            std::vector<PlaylistEntry> getPlaylist() const override;
+            Playlist getPlaylist() const override;
+
+            PositionInfo getPositionInfo() const override;
+            state::PlayState getPlayState() const override;
+            void setPlayState(state::PlayState state) override;
+            void setPosition(int seconds) override;
+        private:
+            std::vector<OmxEntryWrapper> entries;
         };
     }
 }
